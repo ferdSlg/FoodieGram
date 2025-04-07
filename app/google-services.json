@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "919455263542",
+    "project_id": "foodiegram-94c63",
+    "storage_bucket": "foodiegram-94c63.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:919455263542:android:c04788675a6c1116b36197",
+        "android_client_info": {
+          "package_name": "com.ferd.foodiegram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDNnUbLZuKXSXGF8zfRIG1RMmrPLinsa4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
