@@ -22,7 +22,7 @@ public class AuthRepositorio {
                     if (task.isSuccessful()) {
                         String uid = auth.getCurrentUser().getUid();
                         firestore.collection("usuarios").document(uid).set(usuario)
-                                .addOnSuccessListener(unused -> exito.setValue(true))
+                                .addOnSuccessListener(unused -> exito.postValue(true))
                                 .addOnFailureListener(e -> error.setValue("Error al guardar en Firestore"));
                     } else {
                         error.setValue("Error en autenticación: " + task.getException().getMessage());

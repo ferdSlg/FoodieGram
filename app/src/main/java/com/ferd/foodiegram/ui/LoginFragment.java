@@ -37,7 +37,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 public class LoginFragment extends Fragment {
 
     private EditText campoCorreo, campoContrasena;
-    private Button botonIniciarSesion, botonIrARegistro;
+    private Button botonIniciarSesion, botonIrARegistro, btnRecuperarContrasena;
     private ImageButton botonGoogle;
     private LoginViewModel viewModel;
 
@@ -54,6 +54,7 @@ public class LoginFragment extends Fragment {
         botonIniciarSesion = vista.findViewById(R.id.botonLogin);
         botonIrARegistro = vista.findViewById(R.id.botonIrRegistro);
         botonGoogle= vista.findViewById(R.id.botonGoogle);
+        btnRecuperarContrasena = vista.findViewById(R.id.btnRecuperarPass);
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
 
@@ -77,6 +78,14 @@ public class LoginFragment extends Fragment {
         configurarClienteGoogleSignIn();
         inicializarLauncherGoogleSignIn();
         botonGoogle.setOnClickListener(v -> signInWithGoogle());
+
+        btnRecuperarContrasena.setOnClickListener(v -> {
+            getParentFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main, new RecuperarContrasenaFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
 
         return vista;
     }
