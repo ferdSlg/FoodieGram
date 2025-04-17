@@ -27,8 +27,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public class LoginFragment extends Fragment {
@@ -71,9 +74,9 @@ public class LoginFragment extends Fragment {
         botonIniciarSesion.setOnClickListener(v -> iniciarSesion());
         botonIrARegistro.setOnClickListener(v -> irARegistro());
 
-        //configurarClienteGoogleSignIn();
-        //inicializarLauncherGoogleSignIn();
-        //botonGoogle.setOnClickListener(v -> signInWithGoogle());
+        configurarClienteGoogleSignIn();
+        inicializarLauncherGoogleSignIn();
+        botonGoogle.setOnClickListener(v -> signInWithGoogle());
 
         return vista;
     }
@@ -98,7 +101,7 @@ public class LoginFragment extends Fragment {
                 .commit();
     }
 
-    /*private void configurarClienteGoogleSignIn() {
+    private void configurarClienteGoogleSignIn() {
         // Configurar Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)) // Usa tu Web client ID
@@ -106,7 +109,7 @@ public class LoginFragment extends Fragment {
                 .build();
 
         // Inicializar Google Sign-In a partir de la configuración previa
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
+        googleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
     }
 
     private void inicializarLauncherGoogleSignIn() {
@@ -119,9 +122,40 @@ public class LoginFragment extends Fragment {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
                         gestionarResultadoSignIn(task);
                     } else {
-                        Toast.makeText(this, "Error en el inicio de sesión con Google", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "Error en el inicio de sesión con Google", Toast.LENGTH_SHORT).show();
                     }
                 }
         );
-    }*/
+    }
+
+    private void signInWithGoogle() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        googleSignInLauncher.launch(signInIntent);
+    }
+
+    private void gestionarResultadoSignIn(Task<GoogleSignInAccount> task) {
+        try {
+            GoogleSignInAccount account = task.getResult(ApiException.class);
+            firebaseAuthWithGoogle(account);
+        } catch (ApiException e) {
+            Toast.makeText(getContext(), "Error al iniciar sesión con Google", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
+        FirebaseAuth.getInstance().signInWithCredential(credential)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Inicio de sesión con Google exitoso", Toast.LENGTH_SHORT).show();
+                        getParentFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.main, new HomeFragment())
+                                .commitNow();
+                    } else {
+                        Toast.makeText(getContext(), "Error al autenticar con Firebase", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
 }
