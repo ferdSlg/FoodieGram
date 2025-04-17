@@ -26,7 +26,7 @@ import java.util.Map;
 
 public class RegistroFragment extends Fragment {
 
-    private EditText editNombre, editCorreo, editContrasena;
+    private EditText editNombre, editCorreo, editContrasena, editConfirmarContrasena;
     private Button botonRegistrar,botonIrLogin;
     private RegistroViewModel viewModel;
 
@@ -37,6 +37,7 @@ public class RegistroFragment extends Fragment {
         editNombre = vista.findViewById(R.id.editNombre);
         editCorreo = vista.findViewById(R.id.editCorreoRegistro);
         editContrasena = vista.findViewById(R.id.editContrasenaRegistro);
+        editConfirmarContrasena = vista.findViewById(R.id.editConfirContrasenaRegistro);
         botonRegistrar = vista.findViewById(R.id.botonRegistrar);
         botonIrLogin = vista.findViewById(R.id.botonIrLogin);
 
@@ -68,9 +69,15 @@ public class RegistroFragment extends Fragment {
         String nombre = editNombre.getText().toString().trim();
         String correo = editCorreo.getText().toString().trim();
         String contrasena = editContrasena.getText().toString().trim();
+        String confirmarContrasena = editConfirmarContrasena.getText().toString().trim();
 
-        if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(correo) || TextUtils.isEmpty(contrasena)) {
+        if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(correo) || TextUtils.isEmpty(contrasena) || TextUtils.isEmpty(confirmarContrasena)) {
             Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        if (!contrasena.equals(confirmarContrasena)) {
+            Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             return;
         }
 

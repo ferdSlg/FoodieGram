@@ -12,7 +12,20 @@
           "package_name": "com.ferd.foodiegram"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "919455263542-a594rn736g6ddpk59h8u042mvag83jif.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ferd.foodiegram",
+            "certificate_hash": "d6d0210efcf2686183284d6d1dba964c30241d10"
+          }
+        },
+        {
+          "client_id": "919455263542-l7noa0b5hirn0rvuig3d4ssfh3jktuev.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyCDNnUbLZuKXSXGF8zfRIG1RMmrPLinsa4"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "919455263542-l7noa0b5hirn0rvuig3d4ssfh3jktuev.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
