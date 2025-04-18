@@ -63,8 +63,8 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(getContext(), "Bienvenido", Toast.LENGTH_SHORT).show();
                 getParentFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main, new HomeFragment())
-                        .commitNow();
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        .commit();
             }
         });
 
@@ -82,7 +82,7 @@ public class LoginFragment extends Fragment {
         btnRecuperarContrasena.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.main, new RecuperarContrasenaFragment())
+                    .replace(R.id.fragment_container, new RecuperarContrasenaFragment())
                     .addToBackStack(null)
                     .commit();
         });
@@ -105,7 +105,7 @@ public class LoginFragment extends Fragment {
     private void irARegistro() {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main, new RegistroFragment())
+                .replace(R.id.fragment_container, new RegistroFragment())
                 .addToBackStack(null)
                 .commit();
     }
@@ -159,7 +159,7 @@ public class LoginFragment extends Fragment {
                         Toast.makeText(getContext(), "Inicio de sesión con Google exitoso", Toast.LENGTH_SHORT).show();
                         getParentFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.main, new HomeFragment())
+                                .replace(R.id.fragment_container, new HomeFragment())
                                 .commitNow();
                     } else {
                         Toast.makeText(getContext(), "Error al autenticar con Firebase", Toast.LENGTH_SHORT).show();

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,10 +49,12 @@ public class RegistroFragment extends Fragment {
         viewModel.registroExitoso.observe(getViewLifecycleOwner(), exito -> {
             if (exito) {
                 Toast.makeText(getContext(), "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-                getParentFragmentManager()
+                requireActivity()
+                        .getSupportFragmentManager()
                         .beginTransaction()
-                        .replace(R.id.main, new HomeFragment())
-                        .commitNow();
+                        .replace(R.id.fragment_container, new HomeFragment())
+                        // .addToBackStack(null)
+                        .commit();
             }
         });
 
@@ -87,7 +90,7 @@ public class RegistroFragment extends Fragment {
     private void irLogin() {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main, new LoginFragment())
+                .replace(R.id.fragment_container, new LoginFragment())
                 .addToBackStack(null)
                 .commit();
     }
