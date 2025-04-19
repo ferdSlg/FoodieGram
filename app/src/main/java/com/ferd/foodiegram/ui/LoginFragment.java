@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.ferd.foodiegram.MainActivity;
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.ui.home.HomeFragment;
 import com.ferd.foodiegram.viewmodel.LoginViewModel;
@@ -157,10 +158,9 @@ public class LoginFragment extends Fragment {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(getContext(), "Inicio de sesión con Google exitoso", Toast.LENGTH_SHORT).show();
-                        getParentFragmentManager()
-                                .beginTransaction()
-                                .replace(R.id.fragment_container, new HomeFragment())
-                                .commitNow();
+                        Intent intent = new Intent(getContext(), MainActivity.class);
+                        startActivity(intent);
+                        requireActivity().finish();
                     } else {
                         Toast.makeText(getContext(), "Error al autenticar con Firebase", Toast.LENGTH_SHORT).show();
                     }

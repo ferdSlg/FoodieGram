@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imagenSeleccionada"
+        android:layout_width="250dp"
+        android:layout_height="250dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/placeholder_comida"
+        android:background="@android:color/darker_gray" />
+
+    <Button
+        android:id="@+id/botonGaleria"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Seleccionar desde galería"
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/botonCamara"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tomar foto con cámara"
+        android:layout_marginTop="8dp"/>
+
+    <EditText
+        android:id="@+id/editDescripcion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Escribe una descripción..."
+        android:layout_marginTop="12dp"/>
+
+    <Button
+        android:id="@+id/botonPublicar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Publicar"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>
