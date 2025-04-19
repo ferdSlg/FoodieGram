@@ -68,7 +68,7 @@ public class RecuperarContrasenaFragment extends Fragment {
     private void irLogin() {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new LoginFragment())
+                .replace(R.id.fragment_container_auth, new LoginFragment())
                 .addToBackStack(null)
                 .commit();
     }

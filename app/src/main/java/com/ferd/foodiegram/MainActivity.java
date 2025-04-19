@@ -10,6 +10,7 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ferd.foodiegram.ui.LoginFragment;
+import com.ferd.foodiegram.ui.home.CrearPublicacionFragment;
 import com.ferd.foodiegram.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, new LoginFragment())
+                    .replace(R.id.fragment_container, new HomeFragment())
                     .commit();
         }
 
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
             } else if (id == R.id.nav_buscar) {
                 // seleccionado = new BuscarFragment();
             } else if (id == R.id.nav_crear) {
-                // seleccionado = new CrearPublicacionFragment();
+                seleccionado = new CrearPublicacionFragment();
             } else if (id == R.id.nav_perfil) {
                 // seleccionado = new PerfilFragment();
             }

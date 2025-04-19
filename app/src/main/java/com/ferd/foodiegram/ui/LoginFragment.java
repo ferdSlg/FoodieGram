@@ -62,10 +62,10 @@ public class LoginFragment extends Fragment {
         viewModel.loginExitoso.observe(getViewLifecycleOwner(), exito -> {
             if (exito) {
                 Toast.makeText(getContext(), "Bienvenido", Toast.LENGTH_SHORT).show();
-                getParentFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new HomeFragment())
-                        .commit();
+                // Arrancamos MainActivity y cerramos AuthActivity
+                Intent i = new Intent(requireActivity(), MainActivity.class);
+                startActivity(i);
+                requireActivity().finish();
             }
         });
 
@@ -83,7 +83,7 @@ public class LoginFragment extends Fragment {
         btnRecuperarContrasena.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragment_container, new RecuperarContrasenaFragment())
+                    .replace(R.id.fragment_container_auth, new RecuperarContrasenaFragment())
                     .addToBackStack(null)
                     .commit();
         });
@@ -106,7 +106,7 @@ public class LoginFragment extends Fragment {
     private void irARegistro() {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new RegistroFragment())
+                .replace(R.id.fragment_container_auth, new RegistroFragment())
                 .addToBackStack(null)
                 .commit();
     }

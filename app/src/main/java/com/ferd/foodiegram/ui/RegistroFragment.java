@@ -1,5 +1,6 @@
 package com.ferd.foodiegram.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.ferd.foodiegram.MainActivity;
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.ui.home.HomeFragment;
 import com.ferd.foodiegram.viewmodel.RegistroViewModel;
@@ -49,12 +51,9 @@ public class RegistroFragment extends Fragment {
         viewModel.registroExitoso.observe(getViewLifecycleOwner(), exito -> {
             if (exito) {
                 Toast.makeText(getContext(), "Usuario registrado correctamente", Toast.LENGTH_SHORT).show();
-                requireActivity()
-                        .getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, new HomeFragment())
-                        // .addToBackStack(null)
-                        .commit();
+                Intent i = new Intent(requireActivity(), MainActivity.class);
+                startActivity(i);
+                requireActivity().finish();
             }
         });
 
@@ -90,7 +89,7 @@ public class RegistroFragment extends Fragment {
     private void irLogin() {
         getParentFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, new LoginFragment())
+                .replace(R.id.fragment_container_auth, new LoginFragment())
                 .addToBackStack(null)
                 .commit();
     }
