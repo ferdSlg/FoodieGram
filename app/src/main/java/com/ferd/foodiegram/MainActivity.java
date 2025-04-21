@@ -3,11 +3,15 @@ package com.ferd.foodiegram;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.NavigationUI;
 
 import com.ferd.foodiegram.ui.LoginFragment;
 import com.ferd.foodiegram.ui.home.CrearPublicacionFragment;
@@ -15,44 +19,19 @@ import com.ferd.foodiegram.ui.home.HomeFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
-    private BottomNavigationView botonNav;
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        botonNav = findViewById(R.id.bottomNavigationView);
+        // 1) Encuentra NavHostFragment y NavController
+        NavHostFragment navHost = (NavHostFragment)
+                getSupportFragmentManager()
+                        .findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHost.getNavController();
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment())
-                    .commit();
-        }
-
-        botonNav.setOnItemSelectedListener(item -> {
-            Fragment seleccionado = null;
-            int id = item.getItemId();
-
-            if (id == R.id.nav_home) {
-                seleccionado = new HomeFragment();
-            } else if (id == R.id.nav_buscar) {
-                // seleccionado = new BuscarFragment();
-            } else if (id == R.id.nav_crear) {
-                seleccionado = new CrearPublicacionFragment();
-            } else if (id == R.id.nav_perfil) {
-                // seleccionado = new PerfilFragment();
-            }
-
-            if (seleccionado != null) {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, seleccionado)
-                        .commit();
-            }
-
-            return true;
-        });
+        // 2) Conecta BottomNavigationView con NavController
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        NavigationUI.setupWithNavController(bottomNav, navController);
     }
-
 }

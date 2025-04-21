@@ -23,10 +23,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.data.supabase.SupabaseClient;
 import com.ferd.foodiegram.data.supabase.SupabaseStorageApi;
+import com.ferd.foodiegram.viewmodel.CrearPublicacionViewModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -53,30 +55,14 @@ public class CrearPublicacionFragment extends Fragment {
 
     private ImageView imagenSeleccionada;
     private EditText editDescripcion;
+    private Button botonGaleria, botonCamara, botonPublicar;
     private Uri uriImagen;
-
-    private final FirebaseAuth auth = FirebaseAuth.getInstance();
-    private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-
-    // --- Supabase ---
-    private static final String API_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvY3JqdmdqcWN6ZGZ5aWR5b29nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDUwOTg1ODksImV4cCI6MjA2MDY3NDU4OX0.eFt4qe2OKmiekG3azM_sy58H_Ypf1rKQTXMIi8Xs4dU";
-    private final SupabaseStorageApi storageApi = SupabaseClient
-            .getClient()
-            .create(SupabaseStorageApi.class);
-    // ---------------
 
     private ActivityResultLauncher<Intent> galeriaLauncher;
     private ActivityResultLauncher<Uri> camaraLauncher;
-    private final ActivityResultLauncher<String> permisoCamaraLauncher =
-            registerForActivityResult(
-                    new ActivityResultContracts.RequestPermission(),
-                    isGranted -> {
-                        if (isGranted) lanzarCamara();
-                        else Toast.makeText(getContext(),
-                                "Permiso de cámara denegado",
-                                Toast.LENGTH_SHORT).show();
-                    }
-            );
+    private ActivityResultLauncher<String> permisoCamaraLauncher;
+
+    private CrearPublicacionViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -88,38 +74,101 @@ public class CrearPublicacionFragment extends Fragment {
                 false
         );
 
+        // Vincular vistas
         imagenSeleccionada = vista.findViewById(R.id.imagenSeleccionada);
         editDescripcion    = vista.findViewById(R.id.editDescripcion);
-        Button botonGaleria  = vista.findViewById(R.id.botonGaleria);
-        Button botonCamara   = vista.findViewById(R.id.botonCamara);
-        Button botonPublicar = vista.findViewById(R.id.botonPublicar);
+        botonGaleria       = vista.findViewById(R.id.botonGaleria);
+        botonCamara        = vista.findViewById(R.id.botonCamara);
+        botonPublicar      = vista.findViewById(R.id.botonPublicar);
 
+        // Inicializar ViewModel
+        viewModel = new ViewModelProvider(this)
+                .get(CrearPublicacionViewModel.class);
+
+        // Configurar pickers
         configurarPickers();
 
+        // Observadores
+        observarViewModel();
+
+        // Listeners de botones
         botonGaleria.setOnClickListener(v -> abrirGaleria());
-        botonCamara .setOnClickListener(v -> abrirCamara());
-        botonPublicar.setOnClickListener(v -> subirPublicacion());
+        botonCamara.setOnClickListener(v -> abrirCamara());
+        botonPublicar.setOnClickListener(v -> publicar());
 
         return vista;
     }
 
     private void configurarPickers() {
+        // Galería
         galeriaLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == Activity.RESULT_OK
                             && result.getData() != null) {
-                        uriImagen = result.getData().getData();
-                        imagenSeleccionada.setImageURI(uriImagen);
+                        Uri uri = result.getData().getData();
+                        viewModel.setImagen(uri);
                     }
                 }
         );
 
+        // Cámara
         camaraLauncher = registerForActivityResult(
                 new ActivityResultContracts.TakePicture(),
                 exitoso -> {
                     if (exitoso && uriImagen != null) {
-                        imagenSeleccionada.setImageURI(uriImagen);
+                        viewModel.setImagen(uriImagen);
+                    }
+                }
+        );
+
+        permisoCamaraLauncher = registerForActivityResult(
+                new ActivityResultContracts.RequestPermission(),
+                isGranted -> {
+                    if (isGranted) lanzarCamara();
+                    else Toast.makeText(getContext(),
+                                    "Permiso de cámara denegado", Toast.LENGTH_SHORT)
+                            .show();
+                }
+        );
+    }
+
+    private void observarViewModel() {
+        // Imagen seleccionada
+        viewModel.getImagenSeleccionada().observe(
+                getViewLifecycleOwner(), uri -> {
+                    if (uri != null) {
+                        imagenSeleccionada.setImageURI(uri);
+                        uriImagen = uri;
+                    }
+                }
+        );
+
+        // Estado de subida
+        viewModel.getResultadoSubida().observe(
+                getViewLifecycleOwner(), resource -> {
+                    if (resource == null) return;
+                    switch (resource.status) {
+                        case LOADING:
+                            botonPublicar.setEnabled(false);
+                            // Puedes mostrar un ProgressBar si lo deseas
+                            break;
+                        case SUCCESS:
+                            botonPublicar.setEnabled(true);
+                            Toast.makeText(getContext(),
+                                            "¡Publicación exitosa!", Toast.LENGTH_SHORT)
+                                    .show();
+                            // Limpiar campos
+                            imagenSeleccionada.setImageResource(R.drawable.plato);
+                            editDescripcion.setText("");
+                            uriImagen = null;
+                            break;
+                        case ERROR:
+                            botonPublicar.setEnabled(true);
+                            Toast.makeText(getContext(),
+                                    "Error: " + resource.message,
+                                    Toast.LENGTH_LONG).show();
+                            break;
                     }
                 }
         );
@@ -137,15 +186,14 @@ public class CrearPublicacionFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(
                 requireContext(),
                 Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED
-        ) {
+        ) == PackageManager.PERMISSION_GRANTED) {
             lanzarCamara();
         } else {
             permisoCamaraLauncher.launch(Manifest.permission.CAMERA);
         }
     }
 
-    private void subirPublicacion() {
+    private void publicar() {
         String descripcion = editDescripcion.getText()
                 .toString().trim();
 
@@ -156,78 +204,8 @@ public class CrearPublicacionFragment extends Fragment {
             return;
         }
 
-        // 1) Convertir Uri a File temporal
         File imageFile = createTempFileFromUri(uriImagen);
-
-        // 2) Preparar MultipartBody.Part
-        RequestBody reqFile = RequestBody.create(
-                MediaType.parse("image/*"),
-                imageFile
-        );
-        MultipartBody.Part body = MultipartBody.Part.createFormData(
-                "file",
-                imageFile.getName(),
-                reqFile
-        );
-
-        // 3) Llamada a Supabase
-        Call<Void> call = storageApi.uploadImage(
-                "Bearer " + API_KEY,
-                "fotos",
-                imageFile.getName(),
-                body
-        );
-
-        call.enqueue(new Callback<Void>() {
-            @Override
-            public void onResponse(
-                    Call<Void> call,
-                    Response<Void> response
-            ) {
-                if (response.isSuccessful()) {
-                    // URL pública = petición original
-                    String fileUrl = response.raw()
-                            .request()
-                            .url()
-                            .toString();
-
-                    // 4) Guardar en Firestore
-                    Map<String,Object> datos = new HashMap<>();
-                    datos.put("urlFotoComida", fileUrl);
-                    datos.put("descripcion", descripcion);
-                    datos.put("fecha", System.currentTimeMillis());
-                    datos.put("idUsuario", auth.getCurrentUser().getUid());
-                    datos.put("nombreUsuario",
-                            auth.getCurrentUser().getEmail());
-
-                    firestore.collection("publicaciones")
-                            .add(datos)
-                            .addOnSuccessListener(docRef -> Toast
-                                    .makeText(getContext(),
-                                            "¡Publicación subida!",
-                                            Toast.LENGTH_SHORT)
-                                    .show()
-                            )
-                            .addOnFailureListener(e -> Toast
-                                    .makeText(getContext(),
-                                            "Error al guardar en Firestore",
-                                            Toast.LENGTH_SHORT)
-                                    .show()
-                            );
-                } else {
-                    Toast.makeText(getContext(),
-                            "Error al subir imagen a Supabase",
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Void> call, Throwable t) {
-                Toast.makeText(getContext(),
-                        "Fallo de red: " + t.getMessage(),
-                        Toast.LENGTH_SHORT).show();
-            }
-        });
+        viewModel.subirPublicacion(imageFile, descripcion);
     }
 
     private File createTempFileFromUri(Uri uri) {
@@ -235,12 +213,9 @@ public class CrearPublicacionFragment extends Fragment {
                 requireContext().getCacheDir(),
                 "upload_" + System.currentTimeMillis()
         );
-        try (
-                InputStream in = requireContext()
-                        .getContentResolver()
-                        .openInputStream(uri);
-                OutputStream out = new FileOutputStream(file)
-        ) {
+        try (InputStream in = requireContext()
+                .getContentResolver().openInputStream(uri);
+             OutputStream out = new FileOutputStream(file)) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) {

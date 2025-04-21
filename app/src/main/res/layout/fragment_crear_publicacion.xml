@@ -9,8 +9,8 @@
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/materialCardView"
-        android:layout_width="250dp"
-        android:layout_height="250dp"
+        android:layout_width="284dp"
+        android:layout_height="253dp"
         app:cardCornerRadius="8dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -38,17 +38,17 @@
         android:backgroundTint="#E07A5F"
         android:contentDescription="Galeria"
 
-        app:iconPadding="0dp"
+        android:gravity="center"
         app:cornerRadius="8dp"
-        app:icon="@drawable/baseline_file_open_24"
+        app:icon="@drawable/galeria"
         app:iconGravity="textStart"
+        app:iconPadding="0dp"
         app:iconSize="24dp"
         app:iconTint="@android:color/white"
-        android:gravity="center"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.239"
+        app:layout_constraintHorizontal_bias="0.176"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.435" />
@@ -61,18 +61,18 @@
         android:backgroundTint="#E07A5F"
         android:contentDescription="Galeria"
 
-        app:iconPadding="0dp"
+        android:gravity="center"
         app:cornerRadius="8dp"
         app:icon="@drawable/baseline_camera_alt_24"
         app:iconGravity="textStart"
+        app:iconPadding="0dp"
         app:iconSize="24dp"
-        android:gravity="center"
 
         app:iconTint="@android:color/white"
 
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.756"
+        app:layout_constraintHorizontal_bias="0.82"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.435" />

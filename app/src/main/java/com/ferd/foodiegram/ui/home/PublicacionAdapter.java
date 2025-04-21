@@ -26,7 +26,8 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     @NonNull
     @Override
     public PublicacionViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View vista = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_publicacion, parent, false);
+        View vista = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_publicacion, parent, false);
         return new PublicacionViewHolder(vista);
     }
 
@@ -47,6 +48,12 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         return listaPublicaciones.size();
     }
 
+    public void updateData(List<Publicacion> nuevas) {
+        listaPublicaciones.clear();
+        listaPublicaciones.addAll(nuevas);
+        notifyDataSetChanged();
+    }
+
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
         TextView textNombreUsuario, textDescripcion;
         ImageView imagenComida;
@@ -54,8 +61,8 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         public PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
             textNombreUsuario = itemView.findViewById(R.id.textNombreUsuario);
-            textDescripcion = itemView.findViewById(R.id.textDescripcion);
-            imagenComida = itemView.findViewById(R.id.imagenComida);
+            textDescripcion   = itemView.findViewById(R.id.textDescripcion);
+            imagenComida      = itemView.findViewById(R.id.imagenComida);
         }
     }
 }
