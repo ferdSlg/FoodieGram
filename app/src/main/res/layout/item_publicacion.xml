@@ -1,40 +1,106 @@
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="8dp"
+    android:layout_margin="16dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="4dp">
+    app:cardElevation="4dp"
+    app:cardUseCompatPadding="true">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="12dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
+        <!-- HEADER reemplazado por tu TextView -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/avatarUsuario"
+            android:layout_width="36dp"
+            android:layout_height="31dp"
+            android:layout_margin="12dp"
+            android:contentDescription="Foto de usuario"
+            android:src="@drawable/user"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyCircular" />
 
         <TextView
             android:id="@+id/textNombreUsuario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Juan Chef"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:text="Fernando Chef"
             android:textStyle="bold"
-            android:textSize="16sp"/>
+            android:textSize="16sp"
 
-        <ImageView
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/avatarUsuario"/>
+
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imagenComida"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="200dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/plato"
             android:scaleType="centerCrop"
-            android:layout_marginTop="8dp"
-            android:src="@drawable/placeholder_comida"/>
+            android:backgroundTint="#D3D3D3"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyRounded12dp"
+            app:layout_constraintTop_toBottomOf="@id/textNombreUsuario"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
 
-        <TextView
-            android:id="@+id/textDescripcion"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/footer"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp"
             android:layout_marginTop="8dp"
-            android:text="Descripción de la comida"
-            android:textSize="14sp"/>
+            android:backgroundTint="#FFF7FD"
+            app:layout_constraintTop_toBottomOf="@id/imagenComida"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-    </LinearLayout>
-</androidx.cardview.widget.CardView>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:icon="@drawable/favorito"
+                    android:text="15"/>
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:icon="@drawable/comentarios"
+                    android:text="5"/>
+            </LinearLayout>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Title"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/textDescripcion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit…"
+                android:textSize="14sp"/>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>

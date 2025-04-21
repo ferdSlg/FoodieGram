@@ -38,7 +38,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
 
         Glide.with(holder.itemView.getContext())
                 .load(publicacion.getUrlFotoComida())
-                .placeholder(R.drawable.placeholder_comida)
+                .placeholder(R.drawable.plato)
                 .into(holder.imagenComida);
     }
 
