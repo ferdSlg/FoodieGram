@@ -1,5 +1,6 @@
 package com.ferd.foodiegram.ui.perfil;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.*;
@@ -11,12 +12,14 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.*;
 
 import com.bumptech.glide.Glide;
+import com.ferd.foodiegram.AuthActivity;
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.model.Publicacion;
 import com.ferd.foodiegram.model.Usuario;
 import com.ferd.foodiegram.ui.home.PublicacionAdapter;
 import com.ferd.foodiegram.viewmodel.PerfilViewModel;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;
 
@@ -24,7 +27,7 @@ import java.util.ArrayList;
 public class PerfilFragment extends Fragment {
     private ImageView imgPerfil;
     private TextView txtNombre, txtBio, txtSeguidores, txtSeguidos;
-    private Button btnEditar;
+    private Button btnEditar,btnCerrarSesion;
     private RecyclerView rvPosts;
     private PublicacionAdapter adapter;
     private PerfilViewModel vm;
@@ -40,6 +43,7 @@ public class PerfilFragment extends Fragment {
         txtSeguidos = v.findViewById(R.id.txtSeguidos);
         btnEditar = v.findViewById(R.id.btnEditarPerfil);
         rvPosts = v.findViewById(R.id.recyclerMisPosts);
+        btnCerrarSesion   = v.findViewById(R.id.botonCerrarSesion);
 
         rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 1));
         adapter = new PublicacionAdapter(new ArrayList<>());
@@ -56,6 +60,13 @@ public class PerfilFragment extends Fragment {
                 NavHostFragment.findNavController(this)
                         .navigate(R.id.action_perfilFragment_to_editPerfilFragment)
         );
+
+        btnCerrarSesion.setOnClickListener(v3 -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(requireContext(), AuthActivity.class);
+            startActivity(intent);
+            requireActivity().finish();
+        });
 
         return v;
     }
