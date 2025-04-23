@@ -46,8 +46,7 @@ public class PublicacionRepository {
         MultipartBody.Part body = MultipartBody.Part.createFormData(
                 "file", imageFile.getName(), reqFile);
 
-        storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, "fotos", imageFile.getName(), body)
-                .enqueue(new Callback<Void>() {
+        storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, "fotos", imageFile.getName(), true, body).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (!response.isSuccessful()) {

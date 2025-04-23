@@ -25,6 +25,7 @@ import com.ferd.foodiegram.utilidades.Resource;
 import com.ferd.foodiegram.viewmodel.EditPerfilViewModel;
 import com.ferd.foodiegram.viewmodel.PerfilViewModel;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -34,6 +35,7 @@ import java.util.Locale;
 
 public class EditPerfilFragment extends Fragment {
     private ImageView imgPerfilEdit;
+    private FloatingActionButton btnEditFotoPerfil;
     private EditText edtCorreo, edtNombre, edtBio, edtPassword;
     private Button btnGuardar;
     private Uri nuevaUri;
@@ -41,23 +43,23 @@ public class EditPerfilFragment extends Fragment {
     private PerfilViewModel perfilVm;
     private EditPerfilViewModel editVm;
 
-    private ActivityResultLauncher<Intent> galeriaLauncher;
-    private ActivityResultLauncher<Uri> camaraLauncher;
-    private ActivityResultLauncher<String> permisoCamaraLauncher;
+    // Nuevo: lanzador sólo para galería
+    private ActivityResultLauncher<String> pickImageLauncher;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inf, ViewGroup c, Bundle b) {
         View v = inf.inflate(R.layout.fragment_edit_perfil, c, false);
 
-        imgPerfilEdit = v.findViewById(R.id.imgPerfilEdit);
-        edtCorreo = v.findViewById(R.id.edtCorreo);
-        edtNombre = v.findViewById(R.id.edtNombre);
-        edtBio = v.findViewById(R.id.edtBio);
-        edtPassword = v.findViewById(R.id.edtPassword);
-        btnGuardar = v.findViewById(R.id.btnGuardarPerfil);
+        imgPerfilEdit       = v.findViewById(R.id.imgPerfilEdit);
+        btnEditFotoPerfil   = v.findViewById(R.id.btnEditFotoPerfil);
+        edtCorreo           = v.findViewById(R.id.edtCorreo);
+        edtNombre           = v.findViewById(R.id.edtNombre);
+        edtBio              = v.findViewById(R.id.edtBio);
+        edtPassword         = v.findViewById(R.id.edtPassword);
+        btnGuardar          = v.findViewById(R.id.btnGuardarPerfil);
 
         perfilVm = new ViewModelProvider(this).get(PerfilViewModel.class);
-        editVm = new ViewModelProvider(this).get(EditPerfilViewModel.class);
+        editVm   = new ViewModelProvider(this).get(EditPerfilViewModel.class);
 
         // Precarga datos
         perfilVm.getUsuario().observe(getViewLifecycleOwner(), u -> {
@@ -71,7 +73,7 @@ public class EditPerfilFragment extends Fragment {
                     .into(imgPerfilEdit);
         });
 
-        // Observa resultado
+        // Observa resultado de guardado
         editVm.getResultado().observe(getViewLifecycleOwner(), res -> {
             if (res == null) return;
             switch (res.status) {
@@ -91,89 +93,71 @@ public class EditPerfilFragment extends Fragment {
             }
         });
 
-        configurarPickers();
+        configurarGaleriaPicker();
+
+        // Al pulsar el icono de cámara, abrimos galería
+        btnEditFotoPerfil.setOnClickListener(x -> pickImage());
+        // (Opcional) también puedes ponerlo en la propia imagen:
+        //imgPerfilEdit.setOnClickListener(x -> pickImage());
 
         btnGuardar.setOnClickListener(x -> {
-            String email = edtCorreo.getText().toString().trim();
-            String nombre = edtNombre.getText().toString().trim();
-            String bio = edtBio.getText().toString().trim();
+            String email    = edtCorreo.getText().toString().trim();
+            String nombre   = edtNombre.getText().toString().trim();
+            String bio      = edtBio.getText().toString().trim();
             String password = edtPassword.getText().toString().trim();
-            File fotoFile = (nuevaUri != null)
+            File fotoFile   = (nuevaUri != null)
                     ? createTempFileFromUri(nuevaUri)
                     : null;
-
+            // Lanza la actualización (incluye subida de foto si fotoFile != null)
             editVm.actualizar(email, password, nombre, bio, fotoFile);
         });
 
         return v;
     }
 
-    private void configurarPickers() {
-        galeriaLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(), res -> {
-                    if (res.getResultCode() == getActivity().RESULT_OK && res.getData() != null) {
-                        nuevaUri = res.getData().getData();
+    private void configurarGaleriaPicker() {
+        // Sólo picker de galería: GetContent dispara un selector de tipo MIME
+        pickImageLauncher = registerForActivityResult(
+                new ActivityResultContracts.GetContent(),
+                uri -> {
+                    if (uri != null) {
+                        nuevaUri = uri;
                         imgPerfilEdit.setImageURI(nuevaUri);
                     }
                 }
         );
-        camaraLauncher = registerForActivityResult(
-                new ActivityResultContracts.TakePicture(), ok -> {
-                    if (ok && nuevaUri != null) imgPerfilEdit.setImageURI(nuevaUri);
-                }
-        );
-        permisoCamaraLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(), granted -> {
-                    if (granted) launchCamara();
-                    else Toast.makeText(getContext(),
-                            "Permiso cámara denegado", Toast.LENGTH_SHORT).show();
-                }
-        );
-        imgPerfilEdit.setOnClickListener(v -> abrirGaleria());
     }
 
-    private void abrirGaleria() {
-        Intent i = new Intent(Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        galeriaLauncher.launch(i);
+    private void pickImage() {
+        // Filtramos por imágenes
+        pickImageLauncher.launch("image/*");
     }
 
-    private void launchCamara() {
-        if (ContextCompat.checkSelfPermission(requireContext(),
-                Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-            ContentValues cv = new ContentValues();
-            cv.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-            nuevaUri = requireContext().getContentResolver()
-                    .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, cv);
-            camaraLauncher.launch(nuevaUri);
-        } else {
-            permisoCamaraLauncher.launch(Manifest.permission.CAMERA);
-        }
-    }
-
+    // Este método queda igual que antes
     private File createTempFileFromUri(Uri uri) {
-        // Extrae mimeType y extensión
         String mime = requireContext().getContentResolver().getType(uri);
         String ext = ".jpg";
         if ("image/png".equals(mime)) ext = ".png";
         else if ("image/jpeg".equals(mime)) ext = ".jpg";
         else {
-            String guessed = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+            String guessed = MimeTypeMap.getSingleton()
+                    .getExtensionFromMimeType(mime);
             if (guessed != null) ext = "." + guessed;
         }
 
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
-                .format(new Date());
+        String timestamp = new SimpleDateFormat(
+                "yyyyMMdd_HHmmss", Locale.getDefault()
+        ).format(new Date());
         File file = new File(requireContext().getCacheDir(),
                 "perfil_" + timestamp + ext);
 
-        try (InputStream in = requireContext().getContentResolver().openInputStream(uri);
+        try (InputStream in = requireContext()
+                .getContentResolver().openInputStream(uri);
              OutputStream out = new FileOutputStream(file)) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-        } catch (IOException ignored) {
-        }
+        } catch (IOException ignored) { }
 
         return file;
     }

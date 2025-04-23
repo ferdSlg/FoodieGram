@@ -1,96 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <!-- Foto de perfil -->
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:shapeAppearance="@style/ShapeAppearance.CircleCard">
 
-        <!-- Foto de perfil -->
         <ImageView
             android:id="@+id/imgPerfil"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/user"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:contentDescription="foto de perfil"
-            android:layout_marginBottom="8dp"
-            android:background="@color/black" />
+            android:src="@drawable/user" />
+    </com.google.android.material.card.MaterialCardView>
 
-        <!-- Nombre -->
+    <!-- Nombre -->
+    <TextView
+        android:id="@+id/txtNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Nombre Usuario"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Bio -->
+    <TextView
+        android:id="@+id/txtBio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:gravity="center"
+        android:text="Aquí va la bio del usuario"
+        android:textColor="#666"
+        android:textSize="14sp" />
+
+    <!-- Seguidores / Seguidos -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
         <TextView
-            android:id="@+id/txtNombre"
+            android:id="@+id/txtSeguidores"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textSize="20sp"
-            android:layout_gravity="center_horizontal"
-            android:text="Nombre Usuario" />
+            android:layout_marginEnd="4dp"
+            android:text="0"
+            android:textStyle="bold" />
 
-        <!-- Bio -->
         <TextView
-            android:id="@+id/txtBio"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:textColor="#666"
-            android:layout_marginTop="4dp"
-            android:text="Aquí va la bio del usuario"
-            android:gravity="center" />
+            android:layout_marginEnd="16dp"
+            android:text="Seguidores" />
 
-        <!-- Seguidores / Seguidos -->
-        <LinearLayout
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/txtSeguidos"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginTop="12dp">
+            android:layout_marginEnd="4dp"
+            android:text="0"
+            android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/txtSeguidores"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:layout_marginEnd="4dp"
-                android:text="0" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Seguidores"
-                android:layout_marginEnd="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Siguiendo" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/txtSeguidos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textStyle="bold"
-                android:layout_marginEnd="4dp"
-                android:text="0" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Siguiendo" />
-        </LinearLayout>
+    <!-- Botones Editar y Cerrar Sesión, centrados -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <!-- Botón Editar -->
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnEditarPerfil"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Editar Perfil"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp" />
+            android:text="Editar"
+            android:backgroundTint="#E07A5F"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/editar"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="@android:color/white" />
 
-        <!-- Grid de publicaciones -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerMisPosts"
-            android:layout_width="match_parent"
+        <Space
+            android:layout_width="16dp"
+            android:layout_height="wrap_content" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/botonCerrarSesion"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:text="Salir"
+            android:backgroundTint="#E07A5F"
+            app:cornerRadius="8dp"
+            app:icon="@drawable/salir"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp"
+            app:iconSize="24dp"
+            app:iconTint="@android:color/white" />
 
     </LinearLayout>
-</ScrollView>
+
+    <!-- RecyclerView: ocupa todo el espacio restante y maneja el scroll -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerMisPosts"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

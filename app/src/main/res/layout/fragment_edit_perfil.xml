@@ -1,66 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
+    <!-- 1) CardView circular -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardProfile"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        app:cardPreventCornerOverlap="false"
+        app:cardUseCompatPadding="true"
+        app:shapeAppearance="@style/ShapeAppearance.CircleCard"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.03">
 
         <ImageView
             android:id="@+id/imgPerfilEdit"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/user"
-            android:scaleType="centerCrop"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Nuevo: Correo -->
-        <EditText
-            android:id="@+id/edtCorreo"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Correo"
-            android:inputType="textEmailAddress"
-            android:layout_marginTop="8dp"/>
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user" />
+    </com.google.android.material.card.MaterialCardView>
 
-        <!-- Nombre -->
-        <EditText
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btnEditFotoPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:fabSize="mini"
+        app:srcCompat="@drawable/baseline_camera_alt_24"
+        app:backgroundTint="@android:color/white"
+        app:tint="#666666"
+        android:contentDescription="Cambiar foto de perfil"
+        app:layout_constraintBottom_toBottomOf="@id/cardProfile"
+        app:layout_constraintEnd_toEndOf="@id/cardProfile"
+        android:layout_margin="8dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtf_nombre_registro"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:hint="Nombre completo"
+        app:boxBackgroundColor="#F5F5F5"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#E0E0E0"
+        app:boxStrokeWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.353">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtNombre"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre"
-            android:inputType="textPersonName"
-            android:layout_marginTop="8dp"/>
+            android:inputType="textEmailAddress"
+            android:textColor="#888888"
+            android:textColorHint="#9E9E9E" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Bio -->
-        <EditText
-            android:id="@+id/edtBio"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtf_correo_registro"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:hint="Correo electrónico"
+        app:boxBackgroundColor="#F5F5F5"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#E0E0E0"
+        app:boxStrokeWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.467">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtCorreo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Bio"
-            android:inputType="textMultiLine"
-            android:minLines="3"
-            android:layout_marginTop="8dp"/>
+            android:inputType="textEmailAddress"
+            android:textColor="#888888"
+            android:textColorHint="#9E9E9E" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <!-- Nuevo: Nueva contraseña -->
-        <EditText
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtf_contrasena_registro"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@android:color/transparent"
+        android:hint="Contraseña"
+        app:boxBackgroundColor="#F5F5F5"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#E0E0E0"
+        app:boxStrokeWidth="1dp"
+        app:endIconMode="password_toggle"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.575">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nueva contraseña"
             android:inputType="textPassword"
-            android:layout_marginTop="8dp"/>
+            android:textColor="#888888"
+            android:textColorHint="#9E9E9E" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-        <Button
-            android:id="@+id/btnGuardarPerfil"
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/txtf_bio"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@android:color/transparent"
+        android:hint="Biografia"
+        app:boxBackgroundColor="#F5F5F5"
+        app:boxCornerRadiusBottomEnd="8dp"
+        app:boxCornerRadiusBottomStart="8dp"
+        app:boxCornerRadiusTopEnd="8dp"
+        app:boxCornerRadiusTopStart="8dp"
+        app:boxStrokeColor="#E0E0E0"
+        app:boxStrokeWidth="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.705">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtBio"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Guardar Cambios"
-            android:layout_marginTop="16dp"/>
+            android:inputType="textEmailAddress"
+            android:textColor="#888888"
+            android:textColorHint="#9E9E9E" />
+    </com.google.android.material.textfield.TextInputLayout>
 
-    </LinearLayout>
-</ScrollView>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnGuardarPerfil"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="0dp"
+        android:layout_marginTop="24dp"
+        android:backgroundTint="#E07A5F"
+        android:text="Guardar Cambios"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:cornerRadius="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.823" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

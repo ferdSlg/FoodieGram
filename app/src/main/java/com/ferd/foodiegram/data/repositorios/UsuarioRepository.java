@@ -1,5 +1,7 @@
 package com.ferd.foodiegram.data.repositorios;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -16,6 +18,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URLConnection;
 import java.util.*;
 
@@ -141,18 +144,43 @@ public class UsuarioRepository {
             );
 
             // 3) Sube la imagen a Supabase incluyendo apikey y Authorization
-            storageApi.uploadImage(
-                    API_KEY,                            // header "apikey"
-                    "Bearer " + API_KEY,                // header "Authorization"
-                    PROFILE_BUCKET,                     // bucket
-                    userId + "/" + fotoFile.getName(),  // path dentro del bucket
+            //storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, PROFILE_BUCKET, userId + "/" + fotoFile.getName(), true, part)
+            // Prepara el Call
+            Call<Void> uploadCall = storageApi.uploadImage(
+                    API_KEY,
+                    "Bearer " + API_KEY,
+                    PROFILE_BUCKET,
+                    userId + "/" + fotoFile.getName(),
+                    true,
                     part
-            ).enqueue(new Callback<Void>() {
+            );
+
+            // Imprime en log la URL completa que se solicitará
+            Log.d("SupabaseUpload", "Request URL: " + uploadCall.request().url().toString());
+
+            // Ahora sí, encolamos la llamada
+            uploadCall
+                    .enqueue(new Callback<Void>() {
                 @Override
                 public void onResponse(Call<Void> call, Response<Void> resp) {
-                    if (!resp.isSuccessful()) {
+                    /*if (!resp.isSuccessful()) {
                         live.setValue(Resource.error(
                                 "Error al subir foto: código " + resp.code()));
+                        return;
+                    }*/
+                    if (!resp.isSuccessful()) {
+                        String errorJson = "";
+                        try {
+                            errorJson = resp.errorBody() != null
+                                    ? resp.errorBody().string()
+                                    : "sin cuerpo de error";
+                        } catch (IOException e) { /*…*/ }
+                        Log.e("SupabaseUpload",
+                                "UPLOAD ERROR code=" + resp.code()
+                                        + " msg=" + resp.message()
+                                        + " body=" + errorJson
+                        );
+                        live.setValue(Resource.error("Error al subir foto: " + errorJson));
                         return;
                     }
                     // 4) Al éxito, toma la URL pública y parchea Firestore

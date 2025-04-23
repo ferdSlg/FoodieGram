@@ -41,7 +41,7 @@ public class PerfilFragment extends Fragment {
         btnEditar = v.findViewById(R.id.btnEditarPerfil);
         rvPosts = v.findViewById(R.id.recyclerMisPosts);
 
-        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 3));
+        rvPosts.setLayoutManager(new GridLayoutManager(getContext(), 1));
         adapter = new PublicacionAdapter(new ArrayList<>());
         rvPosts.setAdapter(adapter);
 
