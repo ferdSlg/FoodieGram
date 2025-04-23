@@ -10,9 +10,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#FEF7FF">
 
-        <!-- HEADER reemplazado por tu TextView -->
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatarUsuario"
             android:layout_width="36dp"
@@ -75,7 +75,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/favorito"
-                    android:text="15"/>
+                    app:iconTint="@color/black"
+                    android:text="15"
+                    android:textColor="@color/black"/>
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
@@ -83,7 +85,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     app:icon="@drawable/comentarios"
-                    android:text="5"/>
+                    app:iconTint="@color/black"
+                    android:text="5"
+                    android:textColor="@color/black"/>
             </LinearLayout>
 
             <com.google.android.material.textview.MaterialTextView

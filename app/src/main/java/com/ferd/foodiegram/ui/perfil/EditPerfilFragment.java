@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.*;
+import android.webkit.MimeTypeMap;
 import android.widget.*;
 import androidx.activity.result.*;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -15,6 +16,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+
 import com.bumptech.glide.Glide;
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.utilidades.Resource;
@@ -44,7 +47,6 @@ public class EditPerfilFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inf, ViewGroup c, Bundle b) {
         View v = inf.inflate(R.layout.fragment_edit_perfil, c, false);
 
-        // 1) Bind vistas
         imgPerfilEdit = v.findViewById(R.id.imgPerfilEdit);
         edtCorreo     = v.findViewById(R.id.edtCorreo);
         edtNombre     = v.findViewById(R.id.edtNombre);
@@ -52,11 +54,10 @@ public class EditPerfilFragment extends Fragment {
         edtPassword   = v.findViewById(R.id.edtPassword);
         btnGuardar    = v.findViewById(R.id.btnGuardarPerfil);
 
-        // 2) ViewModels
         perfilVm = new ViewModelProvider(this).get(PerfilViewModel.class);
         editVm   = new ViewModelProvider(this).get(EditPerfilViewModel.class);
 
-        // 3) Precarga datos actuales
+        // Precarga datos
         perfilVm.getUsuario().observe(getViewLifecycleOwner(), u -> {
             if (u == null) return;
             edtCorreo.setText(u.getCorreo());
@@ -68,7 +69,7 @@ public class EditPerfilFragment extends Fragment {
                     .into(imgPerfilEdit);
         });
 
-        // 4) Resultado de la actualización
+        // Observa resultado
         editVm.getResultado().observe(getViewLifecycleOwner(), res -> {
             if (res == null) return;
             switch (res.status) {
@@ -78,7 +79,7 @@ public class EditPerfilFragment extends Fragment {
                 case SUCCESS:
                     Toast.makeText(getContext(),
                             "Perfil actualizado", Toast.LENGTH_SHORT).show();
-                    requireActivity().onBackPressed();
+                    NavHostFragment.findNavController(this).popBackStack();
                     break;
                 case ERROR:
                     btnGuardar.setEnabled(true);
@@ -88,16 +89,14 @@ public class EditPerfilFragment extends Fragment {
             }
         });
 
-        // 5) Configura pickers
         configurarPickers();
 
-        // 6) Guardar cambios
         btnGuardar.setOnClickListener(x -> {
             String email    = edtCorreo.getText().toString().trim();
             String nombre   = edtNombre.getText().toString().trim();
             String bio      = edtBio.getText().toString().trim();
-            String password = edtPassword.getText().toString(); // puede quedar vacío
-            File fotoFile = (nuevaUri != null)
+            String password = edtPassword.getText().toString().trim();
+            File fotoFile   = (nuevaUri != null)
                     ? createTempFileFromUri(nuevaUri)
                     : null;
 
@@ -110,7 +109,7 @@ public class EditPerfilFragment extends Fragment {
     private void configurarPickers() {
         galeriaLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(), res -> {
-                    if (res.getResultCode() == Activity.RESULT_OK && res.getData() != null) {
+                    if (res.getResultCode() == getActivity().RESULT_OK && res.getData() != null) {
                         nuevaUri = res.getData().getData();
                         imgPerfilEdit.setImageURI(nuevaUri);
                     }
@@ -151,14 +150,28 @@ public class EditPerfilFragment extends Fragment {
     }
 
     private File createTempFileFromUri(Uri uri) {
+        // Extrae mimeType y extensión
+        String mime = requireContext().getContentResolver().getType(uri);
+        String ext  = ".jpg";
+        if ("image/png".equals(mime)) ext = ".png";
+        else if ("image/jpeg".equals(mime)) ext = ".jpg";
+        else {
+            String guessed = MimeTypeMap.getSingleton().getExtensionFromMimeType(mime);
+            if (guessed != null) ext = "." + guessed;
+        }
+
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault())
+                .format(new Date());
         File file = new File(requireContext().getCacheDir(),
-                "perfil_" + System.currentTimeMillis());
-        try (InputStream in = requireContext().getContentResolver().openInputStream(uri);
-             OutputStream out = new FileOutputStream(file)) {
+                "perfil_" + timestamp + ext);
+
+        try ( InputStream in = requireContext().getContentResolver().openInputStream(uri);
+              OutputStream out = new FileOutputStream(file) ) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
         } catch (IOException ignored) {}
+
         return file;
     }
 }

@@ -13,6 +13,7 @@ public interface SupabaseStorageApi {
     @Multipart
     @POST("storage/v1/object/{bucket}/{fileName}")
     Call<Void> uploadImage(
+            @Header("apikey") String apiKey,            // ← agregado
             @Header("Authorization") String authToken,
             @Path("bucket") String bucket,
             @Path("fileName") String fileName,
@@ -21,6 +22,7 @@ public interface SupabaseStorageApi {
 
     @DELETE("storage/v1/object/{bucket}/{fileName}")
     Call<Void> deleteImage(
+            @Header("apikey") String apiKey,            // ← agregado
             @Header("Authorization") String authToken,
             @Path("bucket") String bucket,
             @Path("fileName") String fileName
