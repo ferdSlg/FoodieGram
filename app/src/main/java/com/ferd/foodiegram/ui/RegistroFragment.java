@@ -30,7 +30,7 @@ import java.util.Map;
 public class RegistroFragment extends Fragment {
 
     private EditText editNombre, editCorreo, editContrasena, editConfirmarContrasena;
-    private Button botonRegistrar,botonIrLogin;
+    private Button botonRegistrar, botonIrLogin;
     private RegistroViewModel viewModel;
 
     @Override

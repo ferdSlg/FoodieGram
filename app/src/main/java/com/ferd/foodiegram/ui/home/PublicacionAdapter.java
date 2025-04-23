@@ -61,8 +61,8 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         public PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
             textNombreUsuario = itemView.findViewById(R.id.textNombreUsuario);
-            textDescripcion   = itemView.findViewById(R.id.textDescripcion);
-            imagenComida      = itemView.findViewById(R.id.imagenComida);
+            textDescripcion = itemView.findViewById(R.id.textDescripcion);
+            imagenComida = itemView.findViewById(R.id.imagenComida);
         }
     }
 }

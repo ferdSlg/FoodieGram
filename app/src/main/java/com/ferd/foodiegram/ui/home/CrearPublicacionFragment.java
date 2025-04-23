@@ -76,10 +76,10 @@ public class CrearPublicacionFragment extends Fragment {
 
         // Vincular vistas
         imagenSeleccionada = vista.findViewById(R.id.imagenSeleccionada);
-        editDescripcion    = vista.findViewById(R.id.editDescripcion);
-        botonGaleria       = vista.findViewById(R.id.botonGaleria);
-        botonCamara        = vista.findViewById(R.id.botonCamara);
-        botonPublicar      = vista.findViewById(R.id.botonPublicar);
+        editDescripcion = vista.findViewById(R.id.editDescripcion);
+        botonGaleria = vista.findViewById(R.id.botonGaleria);
+        botonCamara = vista.findViewById(R.id.botonCamara);
+        botonPublicar = vista.findViewById(R.id.botonPublicar);
 
         // Inicializar ViewModel
         viewModel = new ViewModelProvider(this)

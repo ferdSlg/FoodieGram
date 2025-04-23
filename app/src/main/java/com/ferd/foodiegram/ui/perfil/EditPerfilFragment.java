@@ -10,6 +10,7 @@ import android.provider.MediaStore;
 import android.view.*;
 import android.webkit.MimeTypeMap;
 import android.widget.*;
+
 import androidx.activity.result.*;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -24,6 +25,7 @@ import com.ferd.foodiegram.utilidades.Resource;
 import com.ferd.foodiegram.viewmodel.EditPerfilViewModel;
 import com.ferd.foodiegram.viewmodel.PerfilViewModel;
 import com.google.android.material.button.MaterialButton;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -48,21 +50,21 @@ public class EditPerfilFragment extends Fragment {
         View v = inf.inflate(R.layout.fragment_edit_perfil, c, false);
 
         imgPerfilEdit = v.findViewById(R.id.imgPerfilEdit);
-        edtCorreo     = v.findViewById(R.id.edtCorreo);
-        edtNombre     = v.findViewById(R.id.edtNombre);
-        edtBio        = v.findViewById(R.id.edtBio);
-        edtPassword   = v.findViewById(R.id.edtPassword);
-        btnGuardar    = v.findViewById(R.id.btnGuardarPerfil);
+        edtCorreo = v.findViewById(R.id.edtCorreo);
+        edtNombre = v.findViewById(R.id.edtNombre);
+        edtBio = v.findViewById(R.id.edtBio);
+        edtPassword = v.findViewById(R.id.edtPassword);
+        btnGuardar = v.findViewById(R.id.btnGuardarPerfil);
 
         perfilVm = new ViewModelProvider(this).get(PerfilViewModel.class);
-        editVm   = new ViewModelProvider(this).get(EditPerfilViewModel.class);
+        editVm = new ViewModelProvider(this).get(EditPerfilViewModel.class);
 
         // Precarga datos
         perfilVm.getUsuario().observe(getViewLifecycleOwner(), u -> {
             if (u == null) return;
             edtCorreo.setText(u.getCorreo());
             edtNombre.setText(u.getNombre());
-            edtBio   .setText(u.getBio());
+            edtBio.setText(u.getBio());
             Glide.with(this)
                     .load(u.getUrlFotoPerfil())
                     .placeholder(R.drawable.user)
@@ -92,11 +94,11 @@ public class EditPerfilFragment extends Fragment {
         configurarPickers();
 
         btnGuardar.setOnClickListener(x -> {
-            String email    = edtCorreo.getText().toString().trim();
-            String nombre   = edtNombre.getText().toString().trim();
-            String bio      = edtBio.getText().toString().trim();
+            String email = edtCorreo.getText().toString().trim();
+            String nombre = edtNombre.getText().toString().trim();
+            String bio = edtBio.getText().toString().trim();
             String password = edtPassword.getText().toString().trim();
-            File fotoFile   = (nuevaUri != null)
+            File fotoFile = (nuevaUri != null)
                     ? createTempFileFromUri(nuevaUri)
                     : null;
 
@@ -152,7 +154,7 @@ public class EditPerfilFragment extends Fragment {
     private File createTempFileFromUri(Uri uri) {
         // Extrae mimeType y extensión
         String mime = requireContext().getContentResolver().getType(uri);
-        String ext  = ".jpg";
+        String ext = ".jpg";
         if ("image/png".equals(mime)) ext = ".png";
         else if ("image/jpeg".equals(mime)) ext = ".jpg";
         else {
@@ -165,12 +167,13 @@ public class EditPerfilFragment extends Fragment {
         File file = new File(requireContext().getCacheDir(),
                 "perfil_" + timestamp + ext);
 
-        try ( InputStream in = requireContext().getContentResolver().openInputStream(uri);
-              OutputStream out = new FileOutputStream(file) ) {
+        try (InputStream in = requireContext().getContentResolver().openInputStream(uri);
+             OutputStream out = new FileOutputStream(file)) {
             byte[] buf = new byte[1024];
             int len;
             while ((len = in.read(buf)) > 0) out.write(buf, 0, len);
-        } catch (IOException ignored) {}
+        } catch (IOException ignored) {
+        }
 
         return file;
     }

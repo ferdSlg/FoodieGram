@@ -26,6 +26,7 @@ public class Resource<T> {
 
     /**
      * Crea un Resource en estado de éxito con datos.
+     *
      * @param data El dato resultado.
      */
     public static <T> Resource<T> success(T data) {
@@ -34,6 +35,7 @@ public class Resource<T> {
 
     /**
      * Crea un Resource en estado de error con mensaje.
+     *
      * @param message Descripción del error.
      */
     public static <T> Resource<T> error(String message) {

@@ -2,6 +2,7 @@ package com.ferd.foodiegram.data.repositorios;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
 import com.ferd.foodiegram.data.supabase.SupabaseClient;
 import com.ferd.foodiegram.data.supabase.SupabaseStorageApi;
 import com.ferd.foodiegram.model.Publicacion;
@@ -17,6 +18,7 @@ import com.google.firebase.firestore.Query;
 import java.io.File;
 import java.net.URLConnection;
 import java.util.*;
+
 import okhttp3.*;
 import retrofit2.*;
 import retrofit2.Call;
@@ -66,14 +68,7 @@ public class UsuarioRepository {
      * 2) updatePassword (si no está vacío)
      * 3) sube foto (si hay) y parchea Firestore con nombre, bio y urlFotoPerfil
      */
-    public LiveData<Resource<Void>> updateAuthAndProfile(
-            String userId,
-            String newEmail,
-            String newPassword,
-            String newName,
-            String newBio,
-            File fotoFile
-    ) {
+    public LiveData<Resource<Void>> updateAuthAndProfile(String userId, String newEmail, String newPassword, String newName, String newBio, File fotoFile) {
         MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
         result.setValue(Resource.loading());
 

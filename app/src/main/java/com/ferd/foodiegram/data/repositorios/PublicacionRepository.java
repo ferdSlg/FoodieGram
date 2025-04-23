@@ -56,7 +56,7 @@ public class PublicacionRepository {
                         }
                         String fileUrl = response.raw().request().url().toString();
                         // Guardar en Firestore
-                        Map<String,Object> datos = new HashMap<>();
+                        Map<String, Object> datos = new HashMap<>();
                         datos.put("urlFotoComida", fileUrl);
                         datos.put("descripcion", descripcion);
                         datos.put("fecha", System.currentTimeMillis());

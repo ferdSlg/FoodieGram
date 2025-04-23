@@ -54,7 +54,7 @@ public class LoginFragment extends Fragment {
         campoContrasena = vista.findViewById(R.id.editContrasena);
         botonIniciarSesion = vista.findViewById(R.id.botonLogin);
         botonIrARegistro = vista.findViewById(R.id.botonIrRegistro);
-        botonGoogle= vista.findViewById(R.id.botonGoogle);
+        botonGoogle = vista.findViewById(R.id.botonGoogle);
         btnRecuperarContrasena = vista.findViewById(R.id.btnRecuperarPass);
 
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
