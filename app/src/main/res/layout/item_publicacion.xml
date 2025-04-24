@@ -18,12 +18,16 @@
             android:layout_width="36dp"
             android:layout_height="31dp"
             android:layout_margin="12dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="2dp"
+
             android:contentDescription="Foto de usuario"
             android:src="@drawable/user"
 
+            app:layout_constraintBottom_toTopOf="@+id/imagenComida"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
+            app:layout_constraintVertical_bias="0.222"
             app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyCircular" />
 
         <TextView
@@ -44,13 +48,13 @@
             android:layout_width="0dp"
             android:layout_height="200dp"
             android:layout_marginTop="8dp"
-            android:src="@drawable/plato"
-            android:scaleType="centerCrop"
             android:backgroundTint="#D3D3D3"
-            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyRounded12dp"
-            app:layout_constraintTop_toBottomOf="@id/textNombreUsuario"
+            android:scaleType="centerCrop"
+            android:src="@drawable/plato"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"/>
+            app:layout_constraintTop_toBottomOf="@id/textNombreUsuario"
+            app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.MyRounded12dp" />
 
         <LinearLayout
             android:id="@+id/footer"

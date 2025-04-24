@@ -7,11 +7,11 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ferd.foodiegram.ui.home.HomeFragment"
-        android:label="HomeFragment" />
+        android:label="Home" />
     <fragment
         android:id="@+id/perfilFragment"
         android:name="com.ferd.foodiegram.ui.perfil.PerfilFragment"
-        android:label="PerfilFragment" >
+        android:label="Perfil" >
         <action
             android:id="@+id/action_perfilFragment_to_editPerfilFragment"
             app:destination="@id/editPerfilFragment" />
@@ -19,9 +19,9 @@
     <fragment
         android:id="@+id/crearPublicacionFragment"
         android:name="com.ferd.foodiegram.ui.home.CrearPublicacionFragment"
-        android:label="CrearPublicacionFragment" />
+        android:label="Nueva Publicacion" />
     <fragment
         android:id="@+id/editPerfilFragment"
         android:name="com.ferd.foodiegram.ui.perfil.EditPerfilFragment"
-        android:label="EditPerfilFragment" />
+        android:label="Editar Perfil" />
 </navigation>
