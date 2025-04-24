@@ -1,9 +1,9 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.FoodieGram" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
-    </style>
+    <style name="Theme.FoodieGram" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Pon la status bar blanca (o el color que prefieras) -->
+        <item name="android:statusBarColor">@color/white</item>
 
-    <style name="Theme.FoodieGram" parent="Base.Theme.FoodieGram" />
+        <!-- Este flag hace que Android pinte los iconos y texto en oscuro -->
+        <item name="android:windowLightStatusBar">true</item>
+    </style>
 </resources>
