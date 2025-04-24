@@ -146,14 +146,7 @@ public class UsuarioRepository {
             // 3) Sube la imagen a Supabase incluyendo apikey y Authorization
             //storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, PROFILE_BUCKET, userId + "/" + fotoFile.getName(), true, part)
             // Prepara el Call
-            Call<Void> uploadCall = storageApi.uploadImage(
-                    API_KEY,
-                    "Bearer " + API_KEY,
-                    PROFILE_BUCKET,
-                    userId + "/" + fotoFile.getName(),
-                    true,
-                    part
-            );
+            Call<Void> uploadCall = storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, PROFILE_BUCKET, userId + "/" + fotoFile.getName(), true, part);
 
             // Imprime en log la URL completa que se solicitará
             Log.d("SupabaseUpload", "Request URL: " + uploadCall.request().url().toString());
