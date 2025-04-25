@@ -4,46 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.ferd.foodiegram.MainActivity;
 import com.ferd.foodiegram.R;
-import com.ferd.foodiegram.ui.home.HomeFragment;
+import com.ferd.foodiegram.databinding.FragmentRegistroBinding;
 import com.ferd.foodiegram.viewmodel.RegistroViewModel;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
-
 
 public class RegistroFragment extends Fragment {
-
-    private EditText editNombre, editCorreo, editContrasena, editConfirmarContrasena;
-    private Button botonRegistrar, botonIrLogin;
+    private FragmentRegistroBinding binding;
     private RegistroViewModel viewModel;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View vista = inflater.inflate(R.layout.fragment_registro, container, false);
+        binding = FragmentRegistroBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        editNombre = vista.findViewById(R.id.editNombre);
-        editCorreo = vista.findViewById(R.id.editCorreoRegistro);
-        editContrasena = vista.findViewById(R.id.editContrasenaRegistro);
-        editConfirmarContrasena = vista.findViewById(R.id.editConfirContrasenaRegistro);
-        botonRegistrar = vista.findViewById(R.id.botonRegistrar);
-        botonIrLogin = vista.findViewById(R.id.botonIrLogin);
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // Inicializar ViewModel
         viewModel = new ViewModelProvider(this).get(RegistroViewModel.class);
 
@@ -61,31 +49,29 @@ public class RegistroFragment extends Fragment {
             Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
         });
 
-        botonRegistrar.setOnClickListener(v -> registrarUsuario());
-        botonIrLogin.setOnClickListener(v -> irLogin());
+        binding.botonRegistrar.setOnClickListener(v -> registrarUsuario());
+        binding.botonIrLogin.setOnClickListener(v -> irLogin());
 
-        return vista;
     }
 
+    //Método para registrar usuario
     private void registrarUsuario() {
-        String nombre = editNombre.getText().toString().trim();
-        String correo = editCorreo.getText().toString().trim();
-        String contrasena = editContrasena.getText().toString().trim();
-        String confirmarContrasena = editConfirmarContrasena.getText().toString().trim();
-
+        String nombre = binding.editNombre.getText().toString().trim();
+        String correo = binding.editCorreoRegistro.getText().toString().trim();
+        String contrasena = binding.editContrasenaRegistro.getText().toString().trim();
+        String confirmarContrasena = binding.editConfirContrasenaRegistro.getText().toString().trim();
         if (TextUtils.isEmpty(nombre) || TextUtils.isEmpty(correo) || TextUtils.isEmpty(contrasena) || TextUtils.isEmpty(confirmarContrasena)) {
             Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
-
         if (!contrasena.equals(confirmarContrasena)) {
             Toast.makeText(getContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show();
             return;
         }
-
         viewModel.registrar(nombre, correo, contrasena);
     }
 
+    //Método para ir a login
     private void irLogin() {
         getParentFragmentManager()
                 .beginTransaction()

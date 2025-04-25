@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -15,14 +16,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.ferd.foodiegram.MainActivity;
 import com.ferd.foodiegram.R;
-import com.ferd.foodiegram.ui.home.HomeFragment;
+import com.ferd.foodiegram.databinding.FragmentLoginBinding;
 import com.ferd.foodiegram.viewmodel.LoginViewModel;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -36,29 +34,22 @@ import com.google.firebase.auth.GoogleAuthProvider;
 
 
 public class LoginFragment extends Fragment {
-
-    private EditText campoCorreo, campoContrasena;
-    private Button botonIniciarSesion, botonIrARegistro, btnRecuperarContrasena;
-    private ImageButton botonGoogle;
+    private FragmentLoginBinding binding;
     private LoginViewModel viewModel;
-
     private ActivityResultLauncher<Intent> googleSignInLauncher;
     private GoogleSignInClient googleSignInClient;
     private static final int RC_SIGN_IN = 9001;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View vista = inflater.inflate(R.layout.fragment_login, container, false);
+        binding = FragmentLoginBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
 
-        campoCorreo = vista.findViewById(R.id.editCorreo);
-        campoContrasena = vista.findViewById(R.id.editContrasena);
-        botonIniciarSesion = vista.findViewById(R.id.botonLogin);
-        botonIrARegistro = vista.findViewById(R.id.botonIrRegistro);
-        botonGoogle = vista.findViewById(R.id.botonGoogle);
-        btnRecuperarContrasena = vista.findViewById(R.id.btnRecuperarPass);
-
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-
         viewModel.loginExitoso.observe(getViewLifecycleOwner(), exito -> {
             if (exito) {
                 Toast.makeText(getContext(), "Bienvenido", Toast.LENGTH_SHORT).show();
@@ -68,41 +59,35 @@ public class LoginFragment extends Fragment {
                 requireActivity().finish();
             }
         });
-
         viewModel.mensajeError.observe(getViewLifecycleOwner(), error ->
                 Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show()
         );
-
-        botonIniciarSesion.setOnClickListener(v -> iniciarSesion());
-        botonIrARegistro.setOnClickListener(v -> irARegistro());
-
+        binding.botonLogin.setOnClickListener(v -> iniciarSesion());
+        binding.botonIrRegistro.setOnClickListener(v -> irARegistro());
         configurarClienteGoogleSignIn();
         inicializarLauncherGoogleSignIn();
-        botonGoogle.setOnClickListener(v -> signInWithGoogle());
-
-        btnRecuperarContrasena.setOnClickListener(v -> {
+        binding.botonGoogle.setOnClickListener(v -> signInWithGoogle());
+        binding.btnRecuperarPass.setOnClickListener(v -> {
             getParentFragmentManager()
                     .beginTransaction()
                     .replace(R.id.fragment_container_auth, new RecuperarContrasenaFragment())
                     .addToBackStack(null)
                     .commit();
         });
-
-        return vista;
     }
 
+    //Método para iniciar sesión
     private void iniciarSesion() {
-        String correo = campoCorreo.getText().toString().trim();
-        String contrasena = campoContrasena.getText().toString().trim();
-
+        String correo = binding.editCorreo.getText().toString().trim();
+        String contrasena = binding.editContrasena.getText().toString().trim();
         if (TextUtils.isEmpty(correo) || TextUtils.isEmpty(contrasena)) {
             Toast.makeText(getContext(), "Completa todos los campos", Toast.LENGTH_SHORT).show();
             return;
         }
-
         viewModel.iniciarSesion(correo, contrasena);
     }
 
+    //Método para ir a registro
     private void irARegistro() {
         getParentFragmentManager()
                 .beginTransaction()
@@ -111,17 +96,18 @@ public class LoginFragment extends Fragment {
                 .commit();
     }
 
+    //Método para configurar el cliente de Google Sign-In
     private void configurarClienteGoogleSignIn() {
         // Configurar Google Sign-In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id)) // Usa tu Web client ID
+                .requestIdToken(getString(R.string.default_web_client_id)) // Usa el Web client ID
                 .requestEmail()
                 .build();
-
         // Inicializar Google Sign-In a partir de la configuración previa
         googleSignInClient = GoogleSignIn.getClient(requireContext(), gso);
     }
 
+    //Método para inicializar el ActivityResultLauncher para manejar la respuesta de Google Sign-In
     private void inicializarLauncherGoogleSignIn() {
         // Inicializar el ActivityResultLauncher para manejar la respuesta de Google Sign-In
         googleSignInLauncher = registerForActivityResult(
@@ -138,11 +124,13 @@ public class LoginFragment extends Fragment {
         );
     }
 
+    //Método para iniciar sesión con Google
     private void signInWithGoogle() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         googleSignInLauncher.launch(signInIntent);
     }
 
+    //Método para gestionar el resultado del inicio de sesión con Google
     private void gestionarResultadoSignIn(Task<GoogleSignInAccount> task) {
         try {
             GoogleSignInAccount account = task.getResult(ApiException.class);
@@ -152,6 +140,7 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    //Método para autenticar con Firebase a partir de la cuenta de Google
     private void firebaseAuthWithGoogle(GoogleSignInAccount account) {
         AuthCredential credential = GoogleAuthProvider.getCredential(account.getIdToken(), null);
         FirebaseAuth.getInstance().signInWithCredential(credential)
@@ -166,5 +155,4 @@ public class LoginFragment extends Fragment {
                     }
                 });
     }
-
 }

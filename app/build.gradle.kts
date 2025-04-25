@@ -7,6 +7,10 @@ android {
     namespace = "com.ferd.foodiegram"
     compileSdk = 35
 
+    buildFeatures{
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.ferd.foodiegram"
         minSdk = 24

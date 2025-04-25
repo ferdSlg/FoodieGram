@@ -19,11 +19,14 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.data.supabase.SupabaseClient;
@@ -63,6 +66,7 @@ public class CrearPublicacionFragment extends Fragment {
     private ActivityResultLauncher<String> permisoCamaraLauncher;
 
     private CrearPublicacionViewModel viewModel;
+    private NavController navController;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -73,7 +77,6 @@ public class CrearPublicacionFragment extends Fragment {
                 container,
                 false
         );
-
         // Vincular vistas
         imagenSeleccionada = vista.findViewById(R.id.imagenSeleccionada);
         editDescripcion = vista.findViewById(R.id.editDescripcion);
@@ -81,9 +84,15 @@ public class CrearPublicacionFragment extends Fragment {
         botonCamara = vista.findViewById(R.id.botonCamara);
         botonPublicar = vista.findViewById(R.id.botonPublicar);
 
+        return vista;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         // Inicializar ViewModel
-        viewModel = new ViewModelProvider(this)
-                .get(CrearPublicacionViewModel.class);
+        viewModel = new ViewModelProvider(this).get(CrearPublicacionViewModel.class);
 
         // Configurar pickers
         configurarPickers();
@@ -91,12 +100,13 @@ public class CrearPublicacionFragment extends Fragment {
         // Observadores
         observarViewModel();
 
+        navController = Navigation.findNavController(view);
+
         // Listeners de botones
         botonGaleria.setOnClickListener(v -> abrirGaleria());
         botonCamara.setOnClickListener(v -> abrirCamara());
-        botonPublicar.setOnClickListener(v -> publicar());
+        botonPublicar.setOnClickListener(v -> publicar(navController));
 
-        return vista;
     }
 
     private void configurarPickers() {
@@ -193,7 +203,7 @@ public class CrearPublicacionFragment extends Fragment {
         }
     }
 
-    private void publicar() {
+    private void publicar(NavController navController) {
         String descripcion = editDescripcion.getText()
                 .toString().trim();
 
@@ -206,6 +216,7 @@ public class CrearPublicacionFragment extends Fragment {
 
         File imageFile = createTempFileFromUri(uriImagen);
         viewModel.subirPublicacion(imageFile, descripcion);
+        navController.navigate(R.id.action_crearPublicacionFragment_to_homeFragment);
     }
 
     private File createTempFileFromUri(Uri uri) {
