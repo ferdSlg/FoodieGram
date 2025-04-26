@@ -3,6 +3,7 @@ package com.ferd.foodiegram.model;
 import java.util.List;
 
 public class Usuario {
+    private String id;
     private String nombre;
     private String correo;
     private String urlFotoPerfil;
@@ -23,6 +24,15 @@ public class Usuario {
     }
 
     // Getters y Setters
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String getNombre() {
         return nombre;
     }

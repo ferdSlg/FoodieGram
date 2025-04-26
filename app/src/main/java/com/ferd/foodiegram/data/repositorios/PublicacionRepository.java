@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.ferd.foodiegram.data.supabase.SupabaseClient;
 import com.ferd.foodiegram.data.supabase.SupabaseStorageApi;
 import com.ferd.foodiegram.model.Publicacion;
+import com.ferd.foodiegram.model.Usuario;
 import com.ferd.foodiegram.utilidades.Resource;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -36,7 +37,7 @@ public class PublicacionRepository {
                 .create(SupabaseStorageApi.class);
     }
 
-    // 1) Sube imagen y crea publicación en Firestore
+    //Sube imagen y crea publicación en Firestore
     public LiveData<Resource<Void>> subirPublicacion(File imageFile, String descripcion) {
         MutableLiveData<Resource<Void>> resultado = new MutableLiveData<>();
         resultado.setValue(Resource.loading());
@@ -79,20 +80,34 @@ public class PublicacionRepository {
         return resultado;
     }
 
-    // 2) Obtiene la lista de publicaciones
-    public LiveData<List<Publicacion>> getPublicaciones() {
+    //Obtiene la lista de publicaciones y mostrar solo las publicaciones de los usuarios que estoy siguiendo y las mias
+    public LiveData<List<Publicacion>> getFeed(String userId) {
         MutableLiveData<List<Publicacion>> liveData = new MutableLiveData<>();
-        firestore.collection("publicaciones")
-                .orderBy("fecha", Query.Direction.DESCENDING)
-                .addSnapshotListener((snapshots, e) -> {
-                    if (e != null) return;
-                    List<Publicacion> lista = new ArrayList<>();
-                    for (var doc : snapshots.getDocuments()) {
-                        Publicacion pub = doc.toObject(Publicacion.class);
-                        pub.setId(doc.getId());
-                        lista.add(pub);
-                    }
-                    liveData.setValue(lista);
+        firestore.collection("usuarios")
+                .document(userId)
+                .addSnapshotListener((snap, e) -> {
+                    if (e != null || snap == null) return;
+                    Usuario me = snap.toObject(Usuario.class);
+                    List<String> segs = me.getSeguidos() != null
+                            ? new ArrayList<>(me.getSeguidos())
+                            : new ArrayList<>();
+                    segs.add(userId); // incluir mis propias publicaciones
+
+                    //escuchamos todas las publicaciones
+                    firestore.collection("publicaciones")
+                            .orderBy("fecha", Query.Direction.DESCENDING)
+                            .addSnapshotListener((snaps2, e2) -> {
+                                if (e2 != null) return;
+                                List<Publicacion> feed = new ArrayList<>();
+                                for (var doc : snaps2.getDocuments()) {
+                                    Publicacion p = doc.toObject(Publicacion.class);
+                                    if (segs.contains(p.getIdUsuario())) {
+                                        p.setId(doc.getId());
+                                        feed.add(p);
+                                    }
+                                }
+                                liveData.setValue(feed);
+                            });
                 });
         return liveData;
     }

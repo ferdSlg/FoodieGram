@@ -27,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.crearPublicacionFragment,
+                R.id.buscarAmigoFragment,
                 R.id.homeFragment,
                 R.id.perfilFragment
         ).build();

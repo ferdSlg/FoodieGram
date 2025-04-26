@@ -6,12 +6,12 @@ import com.ferd.foodiegram.model.Usuario;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-public class AuthRepositorio {
+public class AuthRepository {
 
     private final FirebaseAuth auth;
     private final FirebaseFirestore firestore;
 
-    public AuthRepositorio() {
+    public AuthRepository() {
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
     }

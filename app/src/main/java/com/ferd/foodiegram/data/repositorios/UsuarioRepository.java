@@ -2,6 +2,7 @@ package com.ferd.foodiegram.data.repositorios;
 
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -10,12 +11,17 @@ import com.ferd.foodiegram.data.supabase.SupabaseStorageApi;
 import com.ferd.foodiegram.model.Publicacion;
 import com.ferd.foodiegram.model.Usuario;
 import com.ferd.foodiegram.utilidades.Resource;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +29,6 @@ import java.net.URLConnection;
 import java.util.*;
 
 import okhttp3.*;
-import retrofit2.*;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -154,52 +159,144 @@ public class UsuarioRepository {
             // Ahora sí, encolamos la llamada
             uploadCall
                     .enqueue(new Callback<Void>() {
-                @Override
-                public void onResponse(Call<Void> call, Response<Void> resp) {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> resp) {
                     /*if (!resp.isSuccessful()) {
                         live.setValue(Resource.error(
                                 "Error al subir foto: código " + resp.code()));
                         return;
                     }*/
-                    if (!resp.isSuccessful()) {
-                        String errorJson = "";
-                        try {
-                            errorJson = resp.errorBody() != null
-                                    ? resp.errorBody().string()
-                                    : "sin cuerpo de error";
-                        } catch (IOException e) { /*…*/ }
-                        Log.e("SupabaseUpload",
-                                "UPLOAD ERROR code=" + resp.code()
-                                        + " msg=" + resp.message()
-                                        + " body=" + errorJson
-                        );
-                        live.setValue(Resource.error("Error al subir foto: " + errorJson));
-                        return;
-                    }
-                    // 4) Al éxito, toma la URL pública y parchea Firestore
-                    String urlFoto = resp.raw().request().url().toString();
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("nombre", name);
-                    data.put("bio", bio);
-                    data.put("urlFotoPerfil", urlFoto);
-                    firestore.collection("usuarios")
-                            .document(userId)
-                            .update(data)
-                            .addOnSuccessListener(v ->
-                                    live.setValue(Resource.success(null)))
-                            .addOnFailureListener(e ->
-                                    live.setValue(Resource.error(e.getMessage())));
-                }
+                            if (!resp.isSuccessful()) {
+                                String errorJson = "";
+                                try {
+                                    errorJson = resp.errorBody() != null
+                                            ? resp.errorBody().string()
+                                            : "sin cuerpo de error";
+                                } catch (IOException e) { /*…*/ }
+                                Log.e("SupabaseUpload",
+                                        "UPLOAD ERROR code=" + resp.code()
+                                                + " msg=" + resp.message()
+                                                + " body=" + errorJson
+                                );
+                                live.setValue(Resource.error("Error al subir foto: " + errorJson));
+                                return;
+                            }
+                            // 4) Al éxito, toma la URL pública y parchea Firestore
+                            String urlFoto = resp.raw().request().url().toString();
+                            Map<String, Object> data = new HashMap<>();
+                            data.put("nombre", name);
+                            data.put("bio", bio);
+                            data.put("urlFotoPerfil", urlFoto);
+                            firestore.collection("usuarios")
+                                    .document(userId)
+                                    .update(data)
+                                    .addOnSuccessListener(v ->
+                                            live.setValue(Resource.success(null)))
+                                    .addOnFailureListener(e ->
+                                            live.setValue(Resource.error(e.getMessage())));
+                        }
 
-                @Override
-                public void onFailure(Call<Void> call, Throwable t) {
-                    live.setValue(Resource.error(
-                            "Fallo de red al subir foto: " + t.getMessage()));
-                }
-            });
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            live.setValue(Resource.error(
+                                    "Fallo de red al subir foto: " + t.getMessage()));
+                        }
+                    });
         } else {
             // Sin foto, solo parchea texto
             patchText.run();
         }
+    }
+
+    public LiveData<List<Usuario>> buscarUsuarios(String q) {
+        // LiveData que devolverá la lista de usuarios encontrados
+        final MutableLiveData<List<Usuario>> live = new MutableLiveData<>();
+
+        // 1) Normaliza la cadena de búsqueda
+        String texto = q.trim();
+        if (texto.isEmpty()) {
+            live.setValue(new ArrayList<>());
+            return live;
+        }
+        final String qLower      = texto.toLowerCase();
+        final String prefixLower = qLower.substring(0, 1);
+        final String prefixUpper = prefixLower.toUpperCase();
+
+        // 2) Referencia a la colección "usuarios"
+        CollectionReference col = firestore.collection("usuarios");
+
+        // 3) Prefiltros en servidor:
+        Task<QuerySnapshot> nameLowerTask = col
+                .orderBy("nombre")
+                .startAt(prefixLower)
+                .endAt(prefixLower + "\uf8ff")
+                .get();
+
+        Task<QuerySnapshot> nameUpperTask = col
+                .orderBy("nombre")
+                .startAt(prefixUpper)
+                .endAt(prefixUpper + "\uf8ff")
+                .get();
+
+        Task<QuerySnapshot> emailLowerTask = col
+                .orderBy("correo")
+                .startAt(prefixLower)
+                .endAt(prefixLower + "\uf8ff")
+                .get();
+
+        Task<QuerySnapshot> emailUpperTask = col
+                .orderBy("correo")
+                .startAt(prefixUpper)
+                .endAt(prefixUpper + "\uf8ff")
+                .get();
+
+        // 4) Espera todas las queries y luego filtra en cliente
+        List<Task<QuerySnapshot>> tasks = Arrays.asList(
+                nameLowerTask,
+                nameUpperTask,
+                emailLowerTask,
+                emailUpperTask
+        );
+
+        Tasks.whenAllSuccess(tasks)
+                .addOnSuccessListener(new OnSuccessListener<List<Object>>() {
+                    @Override
+                    public void onSuccess(List<Object> results) {
+                        Set<String> vistos = new HashSet<>();
+                        List<Usuario> lista = new ArrayList<>();
+
+                        for (Object r : results) {
+                            QuerySnapshot snap = (QuerySnapshot) r;
+                            for (DocumentSnapshot doc : snap.getDocuments()) {
+                                String docId = doc.getId();
+                                if (!vistos.add(docId)) {
+                                    continue; // evita duplicados
+                                }
+                                Usuario u = doc.toObject(Usuario.class);
+                                u.setId(docId);
+
+                                // 5) Filtrado case-insensitive en cliente
+                                String nameL  = u.getNombre() != null ? u.getNombre().toLowerCase() : "";
+                                String emailL = u.getCorreo() != null ? u.getCorreo().toLowerCase() : "";
+
+                                if (nameL.contains(qLower) || emailL.contains(qLower)) {
+                                    lista.add(u);
+                                }
+                            }
+                        }
+
+                        Log.d("SearchRepo", "prefix+email search hits=" + lista.size());
+                        live.setValue(lista);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("SearchRepo", "Error prefix+email search: " + e.getMessage());
+                        live.setValue(new ArrayList<>());
+                    }
+                });
+
+        return live;
     }
 }
