@@ -212,7 +212,7 @@ public class UsuarioRepository {
         // LiveData que devolverá la lista de usuarios encontrados
         final MutableLiveData<List<Usuario>> live = new MutableLiveData<>();
 
-        // 1) Normaliza la cadena de búsqueda
+        //Normaliza la cadena de búsqueda
         String texto = q.trim();
         if (texto.isEmpty()) {
             live.setValue(new ArrayList<>());
@@ -222,10 +222,10 @@ public class UsuarioRepository {
         final String prefixLower = qLower.substring(0, 1);
         final String prefixUpper = prefixLower.toUpperCase();
 
-        // 2) Referencia a la colección "usuarios"
+        //Referencia a la colección "usuarios"
         CollectionReference col = firestore.collection("usuarios");
 
-        // 3) Prefiltros en servidor:
+        //Prefiltros en servidor:
         Task<QuerySnapshot> nameLowerTask = col
                 .orderBy("nombre")
                 .startAt(prefixLower)
@@ -250,7 +250,7 @@ public class UsuarioRepository {
                 .endAt(prefixUpper + "\uf8ff")
                 .get();
 
-        // 4) Espera todas las queries y luego filtra en cliente
+        //Espera todas las queries y luego filtra en cliente
         List<Task<QuerySnapshot>> tasks = Arrays.asList(
                 nameLowerTask,
                 nameUpperTask,
@@ -275,7 +275,7 @@ public class UsuarioRepository {
                                 Usuario u = doc.toObject(Usuario.class);
                                 u.setId(docId);
 
-                                // 5) Filtrado case-insensitive en cliente
+                                //Filtrado case-insensitive en cliente
                                 String nameL  = u.getNombre() != null ? u.getNombre().toLowerCase() : "";
                                 String emailL = u.getCorreo() != null ? u.getCorreo().toLowerCase() : "";
 

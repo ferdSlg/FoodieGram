@@ -8,6 +8,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
+
 public class FollowRepository {
     private final FirebaseFirestore firestore = FirebaseFirestore.getInstance();
     private final String currentUid = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -53,7 +55,7 @@ public class FollowRepository {
                 .addSnapshotListener((snap, e) -> {
                     if (e != null || snap == null) return;
                     @SuppressWarnings("unchecked")
-                    java.util.List<String> segs = (java.util.List<String>) snap.get("seguidos");
+                    List<String> segs = (List<String>) snap.get("seguidos");
                     result.setValue(segs != null && segs.contains(targetUid));
                 });
         return result;

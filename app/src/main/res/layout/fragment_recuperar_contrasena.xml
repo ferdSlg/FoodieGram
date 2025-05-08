@@ -64,6 +64,7 @@
         android:text="Recuperar"
         android:textColor="@android:color/white"
         app:cornerRadius="8dp"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -92,12 +93,13 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Iniciar sesión"
+        android:textAllCaps="false"
         android:textColor="#E07A5F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.747"
+        app:layout_constraintHorizontal_bias="0.848"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.929" />
+        app:layout_constraintVertical_bias="0.946" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -59,6 +59,7 @@
             android:layout_height="wrap_content"
             android:text="Seguir"
             android:backgroundTint="#E07A5F"
+            android:textAllCaps="false"
             app:cornerRadius="8dp"
             app:iconGravity="textStart"
             app:iconPadding="0dp"

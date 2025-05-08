@@ -123,6 +123,7 @@
         android:text="Publicar"
         android:textColor="@android:color/white"
         android:textStyle="bold"
+        android:textAllCaps="false"
         app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

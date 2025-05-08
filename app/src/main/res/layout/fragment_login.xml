@@ -104,6 +104,7 @@
         android:text="Iniciar sesión"
         android:textColor="@android:color/white"
         android:textStyle="bold"
+        android:textAllCaps="false"
         app:cornerRadius="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -134,6 +135,7 @@
         android:background="@android:color/transparent"
         android:text="¿Olvidaste tu contraseña?"
         android:textColor="#E07A5F"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -147,12 +149,13 @@
         android:background="@android:color/transparent"
         android:text="Regístrate"
         android:textColor="#E07A5F"
+        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.698"
+        app:layout_constraintHorizontal_bias="0.756"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.894" />
+        app:layout_constraintVertical_bias="0.908" />
 
     <TextView
         android:id="@+id/textView"

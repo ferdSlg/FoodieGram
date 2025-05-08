@@ -44,6 +44,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:20.7.0")
     implementation ("com.google.firebase:firebase-storage")
 
+
     // Navigation
     implementation ("androidx.navigation:navigation-fragment-ktx:2.5.3")
     implementation ("androidx.navigation:navigation-ui-ktx:2.5.3")

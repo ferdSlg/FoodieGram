@@ -56,13 +56,13 @@ public class PerfilFragment extends Fragment {
     }
 
     //Método para actualizar los datos del usuario
-    private void bindUsuario(Usuario u) {
-        binding.txtNombre.setText(u.getNombre());
-        binding.txtBio.setText(u.getBio());
-        binding.txtSeguidores.setText(String.valueOf(u.getSeguidores().size()));
-        binding.txtSeguidos.setText(String.valueOf(u.getSeguidos().size()));
+    private void bindUsuario(Usuario usuario) {
+        binding.txtNombre.setText(usuario.getNombre());
+        binding.txtBio.setText(usuario.getBio());
+        binding.txtSeguidores.setText(String.valueOf(usuario.getSeguidores().size()));
+        binding.txtSeguidos.setText(String.valueOf(usuario.getSeguidos().size()));
         Glide.with(this)
-                .load(u.getUrlFotoPerfil())
+                .load(usuario.getUrlFotoPerfil())
                 .placeholder(R.drawable.user)
                 .into(binding.imgPerfil);
     }
