@@ -76,6 +76,8 @@
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:id="@+id/btnLike"
+                    android:src="@drawable/favorito"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/favorito"
@@ -85,6 +87,7 @@
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:id="@+id/btnComentarios"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
@@ -93,14 +96,6 @@
                     android:text="5"
                     android:textColor="@color/black"/>
             </LinearLayout>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Title"
-                android:textSize="16sp"
-                android:textStyle="bold"/>
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/textDescripcion"

@@ -8,7 +8,11 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.ferd.foodiegram.ui.home.HomeFragment"
-        android:label="Foodiegram" />
+        android:label="Foodiegram" >
+        <action
+            android:id="@+id/action_homeFragment_to_comentariosFragment"
+            app:destination="@id/comentariosFragment" />
+    </fragment>
     <fragment
         android:id="@+id/perfilFragment"
         android:name="com.ferd.foodiegram.ui.perfil.PerfilFragment"
@@ -16,6 +20,9 @@
         <action
             android:id="@+id/action_perfilFragment_to_editPerfilFragment"
             app:destination="@id/editPerfilFragment" />
+        <action
+            android:id="@+id/action_perfilFragment_to_comentariosFragment"
+            app:destination="@id/comentariosFragment" />
     </fragment>
     <fragment
         android:id="@+id/crearPublicacionFragment"
@@ -32,10 +39,18 @@
         <action
             android:id="@+id/action_editPerfilFragment_to_perfilFragment"
             app:destination="@id/perfilFragment" />
+        <action
+            android:id="@+id/action_editPerfilFragment_to_comentariosFragment"
+            app:destination="@id/comentariosFragment" />
     </fragment>
     <fragment
         android:id="@+id/buscarAmigoFragment"
         android:name="com.ferd.foodiegram.ui.home.BuscarAmigoFragment"
         android:label="Buscar"
         tools:layout="@layout/fragment_buscar_amigo" />
+    <fragment
+        android:id="@+id/comentariosFragment"
+        android:name="com.ferd.foodiegram.ui.home.ComentariosFragment"
+        android:label="fragment_comentarios"
+        tools:layout="@layout/fragment_comentarios" />
 </navigation>

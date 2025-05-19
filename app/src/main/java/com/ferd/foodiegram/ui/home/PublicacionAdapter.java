@@ -1,27 +1,40 @@
 package com.ferd.foodiegram.ui.home;
 
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
+import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.model.Publicacion;
+import com.ferd.foodiegram.model.Usuario;
+import com.ferd.foodiegram.viewmodel.PublicacionViewModel;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
 public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.PublicacionViewHolder> {
-
     private final List<Publicacion> listaPublicaciones;
+    private final PublicacionViewModel viewModel;
+    private final LifecycleOwner lifecycleOwner;
 
-    public PublicacionAdapter(List<Publicacion> listaPublicaciones) {
+    public PublicacionAdapter(List<Publicacion> listaPublicaciones,
+                              PublicacionViewModel viewModel,
+                              LifecycleOwner lifecycleOwner) {
         this.listaPublicaciones = listaPublicaciones;
+        this.viewModel = viewModel;
+        this.lifecycleOwner = lifecycleOwner;
     }
 
     @NonNull
@@ -35,26 +48,79 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     @Override
     public void onBindViewHolder(@NonNull PublicacionViewHolder holder, int position) {
         Publicacion publicacion = listaPublicaciones.get(position);
+        String postId = publicacion.getId();
 
-        Glide.with(holder.itemView.getContext()).load(publicacion.getUrlFotoComida()).placeholder(R.drawable.plato).into(holder.imagenComida);
-
+        // Cargar avatar y nombre de usuario desde Firestore
         FirebaseFirestore.getInstance()
                 .collection("usuarios")
                 .document(publicacion.getIdUsuario())
                 .get()
                 .addOnSuccessListener(doc -> {
                     if (doc.exists()) {
-                        String nombre   = doc.getString("nombre");
-                        String fotoPerf = doc.getString("urlFotoPerfil");
-                        holder.textNombreUsuario.setText(nombre);
-                        Glide.with(holder.itemView.getContext()).load(fotoPerf).circleCrop().into(holder.imagenPerfil);
+                        Usuario usuario = doc.toObject(Usuario.class);
+                        if (usuario != null) {
+                            holder.textNombreUsuario.setText(usuario.getNombre());
+                            Glide.with(holder.itemView.getContext())
+                                    .load(usuario.getUrlFotoPerfil())
+                                    .circleCrop()
+                                    .placeholder(R.drawable.user)
+                                    .into(holder.imagenPerfil);
+                        }
+                    } else {
+                        holder.textNombreUsuario.setText(publicacion.getNombreUsuario());
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Fallback al email si algo falla
                     holder.textNombreUsuario.setText(publicacion.getNombreUsuario());
                 });
+
+        // Cargar imagen de la publicación
+        Glide.with(holder.itemView.getContext())
+                .load(publicacion.getUrlFotoComida())
+                .placeholder(R.drawable.plato)
+                .into(holder.imagenComida);
+
+        // Descripción
         holder.textDescripcion.setText(publicacion.getDescripcion());
+
+        // Likes
+        viewModel.isLiked(postId).observe(lifecycleOwner, liked -> {
+            holder.isLiked = liked;  // ← guardamos el estado
+            holder.btnLike.setIconResource(
+                    liked ? R.drawable.corazon   // estado liked
+                            : R.drawable.favorito // estado unliked
+            );
+        });
+        viewModel.getLikeCount(postId).observe(lifecycleOwner, count ->
+                holder.btnLike.setText(String.valueOf(count))
+        );
+
+        holder.btnLike.setOnClickListener(v -> {
+            if (holder.isLiked) {
+                viewModel.unlike(postId);
+            } else {
+                viewModel.like(postId);
+            }
+        });
+
+        // Comentarios
+        viewModel.getComments(postId).observe(lifecycleOwner, lista ->
+                holder.btnComment.setText(String.valueOf(lista.size()))
+        );
+        holder.btnComment.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("postId", postId);
+            Navigation.findNavController(v)
+                    .navigate(R.id.comentariosFragment, bundle);//cambio a comentarioFragment para que navegue desde cualquier sitio que se llame
+        });
+
+        // Ver imagen a pantalla completa
+        /*holder.imagenComida.setOnClickListener(v -> {
+            Bundle args = new Bundle();
+            args.putString("imageUrl", publicacion.getUrlFotoComida());
+            Navigation.findNavController(v)
+                    .navigate(R.id.action_home_to_fullScreen, args);
+        });*/
     }
 
     @Override
@@ -62,6 +128,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         return listaPublicaciones.size();
     }
 
+    //Actualiza la lista de publicaciones.
     public void updateData(List<Publicacion> nuevas) {
         listaPublicaciones.clear();
         listaPublicaciones.addAll(nuevas);
@@ -69,15 +136,19 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     }
 
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
-        TextView textNombreUsuario, textDescripcion;
         ImageView imagenPerfil, imagenComida;
-
-        public PublicacionViewHolder(@NonNull View itemView) {
+        TextView textNombreUsuario, textDescripcion;
+        MaterialButton btnLike, btnComment;
+        boolean isLiked = false;
+        PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
-            imagenPerfil      = itemView.findViewById(R.id.avatarUsuario);
+            imagenPerfil = itemView.findViewById(R.id.avatarUsuario);
             textNombreUsuario = itemView.findViewById(R.id.textNombreUsuario);
-            textDescripcion = itemView.findViewById(R.id.textDescripcion);
             imagenComida = itemView.findViewById(R.id.imagenComida);
+            textDescripcion = itemView.findViewById(R.id.textDescripcion);
+            btnLike = itemView.findViewById(R.id.btnLike);
+            btnComment = itemView.findViewById(R.id.btnComentarios);
         }
     }
 }
+

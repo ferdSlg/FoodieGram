@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.ferd.foodiegram.data.supabase.SupabaseClient;
 import com.ferd.foodiegram.data.supabase.SupabaseStorageApi;
+import com.ferd.foodiegram.model.Comentario;
 import com.ferd.foodiegram.model.Publicacion;
 import com.ferd.foodiegram.model.Usuario;
 import com.ferd.foodiegram.utilidades.Resource;
@@ -110,6 +111,118 @@ public class PublicacionRepository {
                             });
                 });
         return liveData;
+    }
+
+    // Likes
+    public LiveData<Resource<Void>> likePost(String postId) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
+        firestore.collection("publicaciones")
+                .document(postId)
+                .collection("likes")
+                .document(uid)
+                .set(new HashMap<>())
+                .addOnSuccessListener(v -> result.setValue(Resource.success(null)))
+                .addOnFailureListener(e -> result.setValue(Resource.error(e.getMessage())));
+        return result;
+    }
+
+    public LiveData<Resource<Void>> unlikePost(String postId) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
+        firestore.collection("publicaciones")
+                .document(postId)
+                .collection("likes")
+                .document(uid)
+                .delete()
+                .addOnSuccessListener(v -> result.setValue(Resource.success(null)))
+                .addOnFailureListener(e -> result.setValue(Resource.error(e.getMessage())));
+        return result;
+    }
+
+    public LiveData<Boolean> isPostLiked(String postId) {
+        String uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        MutableLiveData<Boolean> result = new MutableLiveData<>(false);
+        firestore.collection("publicaciones")
+                .document(postId)
+                .collection("likes")
+                .document(uid)
+                .addSnapshotListener((snap, e) -> {
+                    result.setValue(snap != null && snap.exists());
+                });
+        return result;
+    }
+
+    public LiveData<Integer> getLikesCount(String postId) {
+        MutableLiveData<Integer> result = new MutableLiveData<>(0);
+        firestore.collection("publicaciones")
+                .document(postId)
+                .collection("likes")
+                .addSnapshotListener((snap, e) -> {
+                    if (snap != null) result.setValue(snap.size());
+                });
+        return result;
+    }
+
+    // Comentarios
+    public LiveData<Resource<Void>> addComment(String postId, Comentario comentario) {
+        MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
+        firestore.collection("publicaciones")
+                .document(postId)
+                .collection("comentarios")
+                .add(comentario)
+                .addOnSuccessListener(doc -> result.setValue(Resource.success(null)))
+                .addOnFailureListener(e -> result.setValue(Resource.error(e.getMessage())));
+        return result;
+    }
+
+    public LiveData<List<Comentario>> getComments(String postId) {
+        MutableLiveData<List<Comentario>> result = new MutableLiveData<>(new ArrayList<>());
+        firestore.collection("publicaciones")
+                .document(postId)
+                .collection("comentarios")
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .addSnapshotListener((snap, e) -> {
+                    if (snap != null) {
+                        result.setValue(snap.toObjects(Comentario.class));
+                    }
+                });
+        return result;
+    }
+
+    // Editar publicación
+    public LiveData<Resource<Void>> updatePost(String postId, String nuevaDesc) {
+        MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
+        firestore.collection("publicaciones")
+                .document(postId)
+                .update("descripcion", nuevaDesc)
+                .addOnSuccessListener(v -> result.setValue(Resource.success(null)))
+                .addOnFailureListener(e -> result.setValue(Resource.error(e.getMessage())));
+        return result;
+    }
+
+    // Eliminar publicación y su imagen
+    public LiveData<Resource<Void>> deletePost(String postId, String imagePath) {
+        MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
+        firestore.collection("publicaciones")
+                .document(postId)
+                .delete()
+                .addOnSuccessListener(v -> {
+                    // Eliminar imagen de Supabase
+                    storageApi.deleteImage(API_KEY, "Bearer " + API_KEY, "fotos", imagePath)
+                            .enqueue(new Callback<Void>() {
+                                @Override
+                                public void onResponse(Call<Void> call, Response<Void> response) {
+                                    result.setValue(Resource.success(null));
+                                }
+                                @Override
+                                public void onFailure(Call<Void> call, Throwable t) {
+                                    result.setValue(Resource.error(t.getMessage()));
+                                }
+                            });
+                })
+                .addOnFailureListener(e -> result.setValue(Resource.error(e.getMessage())));
+        return result;
     }
 }
 

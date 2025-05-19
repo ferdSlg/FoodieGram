@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.model.Publicacion;
 import com.ferd.foodiegram.viewmodel.HomeViewModel;
+import com.ferd.foodiegram.viewmodel.PublicacionViewModel;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -26,41 +27,42 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerPublicaciones;
     private PublicacionAdapter adaptador;
-    private HomeViewModel viewModel;
+    private PublicacionViewModel pubVM;
+    private HomeViewModel homeVM;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        View vista = inflater.inflate(
-                R.layout.fragment_home,
-                container,
-                false
-        );
-
-        // Configurar RecyclerView
-        recyclerPublicaciones = vista.findViewById(R.id.recyclerPublicaciones);
-        recyclerPublicaciones.setLayoutManager(new LinearLayoutManager(getContext()));
-        adaptador = new PublicacionAdapter(new ArrayList<>());
-        recyclerPublicaciones.setAdapter(adaptador);
-
-
-
-        return vista;
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // Inicializar ViewModel
-        viewModel = new ViewModelProvider(this).get(HomeViewModel.class);
 
-        // Observar cambios en las publicaciones
-        viewModel.getPublicaciones().observe(
-                getViewLifecycleOwner(), lista -> {
-                    // Actualizar datos del adaptador
-                    adaptador.updateData(lista);
-                }
+        // 1) Referenciar RecyclerView
+        recyclerPublicaciones = view.findViewById(R.id.recyclerPublicaciones);
+        recyclerPublicaciones.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // 2) Inicializar ambos ViewModels
+        homeVM = new ViewModelProvider(this).get(HomeViewModel.class);
+        pubVM  = new ViewModelProvider(requireActivity())
+                .get(PublicacionViewModel.class);
+
+        // 3) Crear el adapter con los 3 parámetros correctos
+        adaptador = new PublicacionAdapter(
+                new ArrayList<>(),      // lista vacía al inicio
+                pubVM,                  // ViewModel de publicaciones (likes, comentarios, etc.)
+                getViewLifecycleOwner() // LifecycleOwner para LiveData
+        );
+        recyclerPublicaciones.setAdapter(adaptador);
+
+        // 4) Observar la lista de publicaciones desde HomeViewModel
+        homeVM.getPublicaciones().observe(
+                getViewLifecycleOwner(),
+                lista -> adaptador.updateData(lista)
         );
     }
 }
