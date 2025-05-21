@@ -37,7 +37,7 @@
                 android:id="@+id/tvNombreUsuario"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre Usuario"
+                android:text="@string/nombre_usuario"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
 
@@ -57,8 +57,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Seguir"
-            android:backgroundTint="#E07A5F"
+            android:text="@string/seguir"
+            android:backgroundTint="@color/naranja"
             android:textAllCaps="false"
             app:cornerRadius="8dp"
             app:iconGravity="textStart"

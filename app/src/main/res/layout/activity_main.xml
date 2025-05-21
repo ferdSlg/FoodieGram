@@ -37,7 +37,7 @@
             android:minHeight="?attr/actionBarSize"
             android:paddingTop="16dp"
             android:paddingBottom="6dp"
-            app:title="FoodieGram"
+            app:title="@string/app_name"
             app:titleTextColor="@color/naranja"
             app:titleCentered="true" />
     </com.google.android.material.appbar.AppBarLayout>

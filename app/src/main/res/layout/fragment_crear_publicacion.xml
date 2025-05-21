@@ -58,7 +58,7 @@
         android:layout_height="54dp"
         android:layout_marginHorizontal="0dp"
         android:layout_marginTop="28dp"
-        android:backgroundTint="#E07A5F"
+        android:backgroundTint="@color/naranja"
 
         android:contentDescription="Galeria"
         android:gravity="center"
@@ -85,7 +85,7 @@
         android:layout_margin="16dp"
 
 
-        android:hint="Descripción"
+        android:hint="@string/descripcion"
         app:boxBackgroundMode="filled"
         app:boxCornerRadiusBottomEnd="8dp"
         app:boxCornerRadiusBottomStart="8dp"
@@ -119,8 +119,8 @@
         android:layout_width="0dp"
         android:layout_height="56dp"
         android:layout_marginHorizontal="0dp"
-        android:backgroundTint="#E07A5F"
-        android:text="Publicar"
+        android:backgroundTint="@color/naranja"
+        android:text="@string/publicar"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         android:textAllCaps="false"

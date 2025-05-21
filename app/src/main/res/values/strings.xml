@@ -3,4 +3,31 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="default_web_client_id">919455263542-l7noa0b5hirn0rvuig3d4ssfh3jktuev.apps.googleusercontent.com</string>
+    <string name="buscar_amigo">Search by name or email</string>
+    <string name="escribe_un_comentario">Write a comment...</string>
+    <string name="enviar">Submit</string>
+    <string name="descripcion">Description</string>
+    <string name="publicar">Publish</string>
+    <string name="nombre_completo">Full Name</string>
+    <string name="email">Email</string>
+    <string name="contrasena">Password</string>
+    <string name="biografia">Bio</string>
+    <string name="guardar_cambios">Save Changes</string>
+    <string name="iniciar_sesion">Log In</string>
+    <string name="olvidaste_password">Forgot your password?</string>
+    <string name="no_tienes_cuenta">Don\'t have an account?</string>
+    <string name="registrate">Register</string>
+    <string name="nombre_usuario">Username</string>
+    <string name="aqui_bio">User bio goes here</string>
+    <string name="seguidores">Followers</string>
+    <string name="siguiendo">Following</string>
+    <string name="editar">Edit</string>
+    <string name="salir">Exit</string>
+    <string name="recuperar_contrasena">Recover Password</string>
+    <string name="recuperar">Recover</string>
+    <string name="ya_tienes_cuenta">Already have an account?</string>
+    <string name="crear_cuenta">Create an account</string>
+    <string name="confirmar_contrasena">Confirm password</string>
+    <string name="registrarse">Register</string>
+    <string name="seguir">Follow</string>
 </resources>

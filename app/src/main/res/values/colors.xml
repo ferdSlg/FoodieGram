@@ -4,6 +4,8 @@
     <color name="white">#FFFFFFFF</color>
     <color name="naranja">#E07A5F</color>
     <color name="gris">#888888</color>
+    <color name="gris95">#f2f2f2</color>
+    <color name="gris46">#757575</color>
     <color name="grisClaro">#E0E0E0</color>
 
 </resources>

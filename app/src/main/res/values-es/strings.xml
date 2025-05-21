@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FoodieGram</string>
+    <string name="buscar_amigo">Buscar por nombre o correo</string>
+    <string name="escribe_un_comentario">Escribe un comentario…</string>
+    <string name="enviar">Enviar</string>
+    <string name="descripcion">Descripción</string>
+    <string name="publicar">Publicar</string>
+    <string name="nombre_completo">Nombre completo</string>
+    <string name="email">Correo electrónico</string>
+    <string name="contrasena">Contraseña</string>
+    <string name="biografia">Biografia</string>
+    <string name="guardar_cambios">Guardar Cambios</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="olvidaste_password">¿Olvidaste tu contraseña?</string>
+    <string name="no_tienes_cuenta">¿No tienes cuenta?</string>
+    <string name="registrate">Regístrate</string>
+    <string name="nombre_usuario">Nombre Usuario</string>
+    <string name="aqui_bio">Aquí va la bio del usuario</string>
+    <string name="seguidores">Seguidores</string>
+    <string name="siguiendo">Siguiendo</string>
+    <string name="editar">Editar</string>
+    <string name="salir">Salir</string>
+    <string name="recuperar_contrasena">Recuperar Contraseña</string>
+    <string name="recuperar">Recuperar</string>
+    <string name="ya_tienes_cuenta">¿Ya tienes una cuanta?</string>
+    <string name="crear_cuenta">Crear cuenta</string>
+    <string name="confirmar_contrasena">Confirmar contraseña</string>
+    <string name="registrarse">Registrarse</string>
+    <string name="seguir">Seguir</string>
+</resources>

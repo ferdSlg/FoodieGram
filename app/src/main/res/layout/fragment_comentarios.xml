@@ -36,7 +36,7 @@
                 android:id="@+id/etComentario"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Escribe un comentario…" />
+                android:hint="@string/escribe_un_comentario" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -47,7 +47,7 @@
             android:layout_marginStart="8dp"
             android:backgroundTint="@color/naranja"
             android:textAllCaps="false"
-            android:text="Enviar" />
+            android:text="@string/enviar" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
