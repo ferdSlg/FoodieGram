@@ -77,11 +77,10 @@
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
                     android:id="@+id/btnLike"
-                    android:src="@drawable/favorito"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:icon="@drawable/favorito"
-                    app:iconTint="@color/black"
+                    app:iconTint="@null"
                     android:text="15"
                     android:textColor="@color/black"/>
 
