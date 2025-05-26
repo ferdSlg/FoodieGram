@@ -94,6 +94,19 @@
                     app:iconTint="@color/black"
                     android:text="5"
                     android:textColor="@color/black"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnEliminar"
+                    style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                    android:layout_width="42dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    app:icon="@drawable/outline_delete_24"
+                    app:iconTint="@color/black"
+                    android:visibility="gone"
+                    android:text=" "
+                    android:textColor="@color/black"/>
+
             </LinearLayout>
 
             <com.google.android.material.textview.MaterialTextView

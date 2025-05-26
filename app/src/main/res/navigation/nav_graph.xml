@@ -51,6 +51,6 @@
     <fragment
         android:id="@+id/comentariosFragment"
         android:name="com.ferd.foodiegram.ui.home.ComentariosFragment"
-        android:label="fragment_comentarios"
+        android:label="Comentario"
         tools:layout="@layout/fragment_comentarios" />
 </navigation>

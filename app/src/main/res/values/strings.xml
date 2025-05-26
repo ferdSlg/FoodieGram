@@ -30,4 +30,8 @@
     <string name="confirmar_contrasena">Confirm password</string>
     <string name="registrarse">Register</string>
     <string name="seguir">Follow</string>
+    <string name="inicio">Home</string>
+    <string name="buscar">Search</string>
+    <string name="crear">Create</string>
+    <string name="perfil">Profile</string>
 </resources>

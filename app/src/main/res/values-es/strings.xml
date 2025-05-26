@@ -28,4 +28,8 @@
     <string name="confirmar_contrasena">Confirmar contraseña</string>
     <string name="registrarse">Registrarse</string>
     <string name="seguir">Seguir</string>
+    <string name="inicio">Inicio</string>
+    <string name="buscar">Buscar</string>
+    <string name="crear">Crear</string>
+    <string name="perfil">Perfil</string>
 </resources>

@@ -3,5 +3,10 @@
     <style name="Base.Theme.FoodieGram" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <!-- Colores para el modo oscuro -->
+        <item name="colorPrimary">@color/naranja</item>
+        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorSurface">@color/black</item>
+        <item name="colorOnSurface">@color/white</item>
     </style>
 </resources>

@@ -100,7 +100,7 @@
         android:layout_height="56dp"
         android:layout_marginHorizontal="0dp"
         android:layout_marginTop="24dp"
-        android:backgroundTint="#E07A5F"
+        android:backgroundTint="@color/naranja"
         android:text="@string/iniciar_sesion"
         android:textColor="@android:color/white"
         android:textStyle="bold"
@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="@string/olvidaste_password"
-        android:textColor="#E07A5F"
+        android:textColor="@color/naranja"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -148,7 +148,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="@string/registrate"
-        android:textColor="#E07A5F"
+        android:textColor="@color/naranja"
         android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -178,23 +178,10 @@
         android:background="@android:color/transparent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.342"
+        app:layout_constraintHorizontal_bias="0.476"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.787"
+        app:layout_constraintVertical_bias="0.792"
         app:srcCompat="@drawable/google" />
-
-    <ImageButton
-        android:id="@+id/imageButton2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.622"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.787"
-        app:srcCompat="@drawable/apple" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,6 +17,7 @@ import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.model.Publicacion;
 import com.ferd.foodiegram.viewmodel.HomeViewModel;
 import com.ferd.foodiegram.viewmodel.PublicacionViewModel;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -52,10 +53,13 @@ public class HomeFragment extends Fragment {
                 .get(PublicacionViewModel.class);
 
         // 3) Crear el adapter con los 3 parámetros correctos
+        String idUsuarioActual = FirebaseAuth.getInstance().getCurrentUser().getUid();
         adaptador = new PublicacionAdapter(
                 new ArrayList<>(),      // lista vacía al inicio
                 pubVM,                  // ViewModel de publicaciones (likes, comentarios, etc.)
-                getViewLifecycleOwner() // LifecycleOwner para LiveData
+                getViewLifecycleOwner(), // LifecycleOwner para LiveData
+                idUsuarioActual,
+                false
         );
         recyclerPublicaciones.setAdapter(adaptador);
 

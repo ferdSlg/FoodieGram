@@ -53,7 +53,7 @@ public class PublicacionViewModel extends ViewModel {
     }
 
     // Eliminación
-    public LiveData<Resource<Void>> deletePost(String postId, String imagePath) {
+    public LiveData<Resource<Void>> eliminarPost(String postId, String imagePath) {
         return repo.deletePost(postId, imagePath);
     }
 }

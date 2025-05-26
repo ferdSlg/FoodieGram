@@ -204,24 +204,56 @@ public class PublicacionRepository {
     // Eliminar publicación y su imagen
     public LiveData<Resource<Void>> deletePost(String postId, String imagePath) {
         MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
+        result.setValue(Resource.loading());
+
+        // Paso 1: Eliminar comentarios
         firestore.collection("publicaciones")
                 .document(postId)
-                .delete()
-                .addOnSuccessListener(v -> {
-                    // Eliminar imagen de Supabase
-                    storageApi.deleteImage(API_KEY, "Bearer " + API_KEY, "fotos", imagePath)
-                            .enqueue(new Callback<Void>() {
-                                @Override
-                                public void onResponse(Call<Void> call, Response<Void> response) {
-                                    result.setValue(Resource.success(null));
+                .collection("comentarios")
+                .get()
+                .addOnSuccessListener(commentsSnap -> {
+                    for (var doc : commentsSnap.getDocuments()) {
+                        doc.getReference().delete();
+                    }
+
+                    // Paso 2: Eliminar likes
+                    firestore.collection("publicaciones")
+                            .document(postId)
+                            .collection("likes")
+                            .get()
+                            .addOnSuccessListener(likesSnap -> {
+                                for (var doc : likesSnap.getDocuments()) {
+                                    doc.getReference().delete();
                                 }
-                                @Override
-                                public void onFailure(Call<Void> call, Throwable t) {
-                                    result.setValue(Resource.error(t.getMessage()));
-                                }
-                            });
+
+                                // Paso 3: Eliminar la publicación
+                                firestore.collection("publicaciones")
+                                        .document(postId)
+                                        .delete()
+                                        .addOnSuccessListener(v -> {
+                                            // Paso 4: Eliminar imagen de Supabase
+                                            storageApi.deleteImage(API_KEY, "Bearer " + API_KEY, "fotos", imagePath)
+                                                    .enqueue(new Callback<Void>() {
+                                                        @Override
+                                                        public void onResponse(Call<Void> call, Response<Void> response) {
+                                                            result.setValue(Resource.success(null));
+                                                        }
+
+                                                        @Override
+                                                        public void onFailure(Call<Void> call, Throwable t) {
+                                                            result.setValue(Resource.error("Error al eliminar imagen: " + t.getMessage()));
+                                                        }
+                                                    });
+                                        })
+                                        .addOnFailureListener(e ->
+                                                result.setValue(Resource.error("Error al eliminar publicación: " + e.getMessage())));
+                            })
+                            .addOnFailureListener(e ->
+                                    result.setValue(Resource.error("Error al eliminar likes: " + e.getMessage())));
                 })
-                .addOnFailureListener(e -> result.setValue(Resource.error(e.getMessage())));
+                .addOnFailureListener(e ->
+                        result.setValue(Resource.error("Error al eliminar comentarios: " + e.getMessage())));
+
         return result;
     }
 }

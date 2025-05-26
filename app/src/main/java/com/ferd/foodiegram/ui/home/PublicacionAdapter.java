@@ -1,5 +1,6 @@
 package com.ferd.foodiegram.ui.home;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LifecycleOwner;
@@ -18,6 +20,7 @@ import com.bumptech.glide.Glide;
 import com.ferd.foodiegram.R;
 import com.ferd.foodiegram.model.Publicacion;
 import com.ferd.foodiegram.model.Usuario;
+import com.ferd.foodiegram.utilidades.Resource;
 import com.ferd.foodiegram.viewmodel.PublicacionViewModel;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -28,13 +31,15 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     private final List<Publicacion> listaPublicaciones;
     private final PublicacionViewModel viewModel;
     private final LifecycleOwner lifecycleOwner;
+    private final String idUsuarioActual;
+    private final boolean esPerfil;
 
-    public PublicacionAdapter(List<Publicacion> listaPublicaciones,
-                              PublicacionViewModel viewModel,
-                              LifecycleOwner lifecycleOwner) {
+    public PublicacionAdapter(List<Publicacion> listaPublicaciones, PublicacionViewModel viewModel, LifecycleOwner lifecycleOwner, String idUsuarioActual, boolean esPerfil) {
         this.listaPublicaciones = listaPublicaciones;
         this.viewModel = viewModel;
         this.lifecycleOwner = lifecycleOwner;
+        this.idUsuarioActual = idUsuarioActual;
+        this.esPerfil = esPerfil;
     }
 
     @NonNull
@@ -114,6 +119,35 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                     .navigate(R.id.comentariosFragment, bundle);//cambio a comentarioFragment para que navegue desde cualquier sitio que se llame
         });
 
+        //eliminar publicación si es tu publicación
+        if (esPerfil && publicacion.getIdUsuario().equals(idUsuarioActual)) {
+            holder.btnEliminar.setVisibility(View.VISIBLE);
+            holder.btnEliminar.setOnClickListener(v -> {
+                String imagePath = obtenerRutaDeImagen(publicacion.getUrlFotoComida());
+
+                // Confirmar antes de eliminar (opcional)
+                new AlertDialog.Builder(holder.itemView.getContext())
+                        .setTitle("Eliminar publicación")
+                        .setMessage("¿Estás seguro de que deseas eliminar esta publicación?")
+                        .setPositiveButton("Sí", (dialog, which) -> {
+                            viewModel.eliminarPost(publicacion.getId(), imagePath)
+                                    .observe(lifecycleOwner, res -> {
+                                        if (res.status == Resource.Status.SUCCESS) {
+                                            listaPublicaciones.remove(holder.getAdapterPosition());
+                                            notifyItemRemoved(holder.getAdapterPosition());
+                                        } else if (res.status == Resource.Status.ERROR) {
+                                            Toast.makeText(holder.itemView.getContext(),
+                                                    "Error: " + res.message, Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                        })
+                        .setNegativeButton("Cancelar", null)
+                        .show();
+            });
+        } else {
+            holder.btnEliminar.setVisibility(View.GONE);
+        }
+
         // Ver imagen a pantalla completa
         /*holder.imagenComida.setOnClickListener(v -> {
             Bundle args = new Bundle();
@@ -138,7 +172,7 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
     static class PublicacionViewHolder extends RecyclerView.ViewHolder {
         ImageView imagenPerfil, imagenComida;
         TextView textNombreUsuario, textDescripcion;
-        MaterialButton btnLike, btnComment;
+        MaterialButton btnLike, btnComment, btnEliminar;
         boolean isLiked = false;
         PublicacionViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -148,7 +182,13 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
             textDescripcion = itemView.findViewById(R.id.textDescripcion);
             btnLike = itemView.findViewById(R.id.btnLike);
             btnComment = itemView.findViewById(R.id.btnComentarios);
+            btnEliminar = itemView.findViewById(R.id.btnEliminar);
         }
+    }
+
+    private String obtenerRutaDeImagen(String urlCompleta) {
+        int index = urlCompleta.lastIndexOf('/');
+        return index != -1 ? urlCompleta.substring(index + 1) : urlCompleta;
     }
 }
 

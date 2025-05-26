@@ -49,11 +49,8 @@ public class PerfilFragment extends Fragment {
         binding.recyclerMisPosts.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
         // 4) Crea el adapter con los 3 parámetros
-        adapter = new PublicacionAdapter(
-                new ArrayList<>(),     // lista vacía al principio
-                pubVM,                 // viewModel para likes, comentarios, etc.
-                getViewLifecycleOwner()// lifecycle owner para LiveData
-        );
+        String idUsuarioActual = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        adapter = new PublicacionAdapter(new ArrayList<>(), pubVM, getViewLifecycleOwner(), idUsuarioActual, true);
         binding.recyclerMisPosts.setAdapter(adapter);
 
         // 5) Observa las publicaciones del perfil
