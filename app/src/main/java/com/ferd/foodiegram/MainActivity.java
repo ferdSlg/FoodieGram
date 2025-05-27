@@ -1,5 +1,6 @@
 package com.ferd.foodiegram;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
         // 2) Conecta BottomNavigationView con NavController
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
         NavigationUI.setupWithNavController(bottomNav, navController);
+        //para bloquear la rotacion de la pantalla
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     @Override

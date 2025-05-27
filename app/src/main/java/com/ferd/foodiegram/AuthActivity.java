@@ -1,6 +1,7 @@
 package com.ferd.foodiegram;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.activity.EdgeToEdge;
@@ -25,6 +26,8 @@ public class AuthActivity extends AppCompatActivity {
                     .replace(R.id.fragment_container_auth, new LoginFragment())
                     .commit();
         }
+        //para bloquear la rotacion de la pantalla
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
     //si ya esta logueado no volver a logearse
