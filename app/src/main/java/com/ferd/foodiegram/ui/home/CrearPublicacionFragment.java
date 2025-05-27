@@ -72,11 +72,7 @@ public class CrearPublicacionFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        View vista = inflater.inflate(
-                R.layout.fragment_crear_publicacion,
-                container,
-                false
-        );
+        View vista = inflater.inflate(R.layout.fragment_crear_publicacion, container, false);
         // Vincular vistas
         imagenSeleccionada = vista.findViewById(R.id.imagenSeleccionada);
         editDescripcion = vista.findViewById(R.id.editDescripcion);
@@ -111,11 +107,8 @@ public class CrearPublicacionFragment extends Fragment {
 
     private void configurarPickers() {
         // Galería
-        galeriaLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == Activity.RESULT_OK
-                            && result.getData() != null) {
+        galeriaLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                         Uri uri = result.getData().getData();
                         viewModel.setImagen(uri);
                     }
@@ -123,22 +116,16 @@ public class CrearPublicacionFragment extends Fragment {
         );
 
         // Cámara
-        camaraLauncher = registerForActivityResult(
-                new ActivityResultContracts.TakePicture(),
-                exitoso -> {
+        camaraLauncher = registerForActivityResult(new ActivityResultContracts.TakePicture(), exitoso -> {
                     if (exitoso && uriImagen != null) {
                         viewModel.setImagen(uriImagen);
                     }
                 }
         );
 
-        permisoCamaraLauncher = registerForActivityResult(
-                new ActivityResultContracts.RequestPermission(),
-                isGranted -> {
+        permisoCamaraLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                     if (isGranted) lanzarCamara();
-                    else Toast.makeText(getContext(),
-                                    "Permiso de cámara denegado", Toast.LENGTH_SHORT)
-                            .show();
+                    else Toast.makeText(getContext(), "Permiso de cámara denegado", Toast.LENGTH_SHORT).show();
                 }
         );
     }
@@ -165,9 +152,7 @@ public class CrearPublicacionFragment extends Fragment {
                             break;
                         case SUCCESS:
                             botonPublicar.setEnabled(true);
-                            Toast.makeText(getContext(),
-                                            "¡Publicación exitosa!", Toast.LENGTH_SHORT)
-                                    .show();
+                            Toast.makeText(getContext(), "¡Publicación exitosa!", Toast.LENGTH_SHORT).show();
                             // Limpiar campos
                             imagenSeleccionada.setImageResource(R.drawable.plato);
                             editDescripcion.setText("");
@@ -175,9 +160,7 @@ public class CrearPublicacionFragment extends Fragment {
                             break;
                         case ERROR:
                             botonPublicar.setEnabled(true);
-                            Toast.makeText(getContext(),
-                                    "Error: " + resource.message,
-                                    Toast.LENGTH_LONG).show();
+                            Toast.makeText(getContext(), "Error: " + resource.message, Toast.LENGTH_LONG).show();
                             break;
                     }
                 }
@@ -185,18 +168,12 @@ public class CrearPublicacionFragment extends Fragment {
     }
 
     private void abrirGaleria() {
-        Intent intent = new Intent(
-                Intent.ACTION_PICK,
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        );
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galeriaLauncher.launch(intent);
     }
 
     private void abrirCamara() {
-        if (ContextCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.CAMERA
-        ) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             lanzarCamara();
         } else {
             permisoCamaraLauncher.launch(Manifest.permission.CAMERA);
@@ -204,13 +181,10 @@ public class CrearPublicacionFragment extends Fragment {
     }
 
     private void publicar(NavController navController) {
-        String descripcion = editDescripcion.getText()
-                .toString().trim();
+        String descripcion = editDescripcion.getText().toString().trim();
 
         if (uriImagen == null || descripcion.isEmpty()) {
-            Toast.makeText(getContext(),
-                    "Debes seleccionar una imagen y escribir una descripción",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Debes seleccionar una imagen y escribir una descripción", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -220,12 +194,8 @@ public class CrearPublicacionFragment extends Fragment {
     }
 
     private File createTempFileFromUri(Uri uri) {
-        File file = new File(
-                requireContext().getCacheDir(),
-                "upload_" + System.currentTimeMillis()
-        );
-        try (InputStream in = requireContext()
-                .getContentResolver().openInputStream(uri);
+        File file = new File(requireContext().getCacheDir(), "upload_" + System.currentTimeMillis());
+        try (InputStream in = requireContext().getContentResolver().openInputStream(uri);
              OutputStream out = new FileOutputStream(file)) {
             byte[] buf = new byte[1024];
             int len;
@@ -239,20 +209,14 @@ public class CrearPublicacionFragment extends Fragment {
     }
 
     private void lanzarCamara() {
-        String nombre = new SimpleDateFormat(
-                "yyyyMMdd_HHmmss",
-                Locale.getDefault()
-        ).format(new Date());
+        String nombre = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(new Date());
         ContentValues values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "IMG_" + nombre);
         values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
 
         uriImagen = requireContext()
                 .getContentResolver()
-                .insert(
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                        values
-                );
+                .insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         camaraLauncher.launch(uriImagen);
     }
 }

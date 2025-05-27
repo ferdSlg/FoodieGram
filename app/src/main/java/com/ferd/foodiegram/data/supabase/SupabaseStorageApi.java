@@ -17,8 +17,8 @@ public interface SupabaseStorageApi {
             @Header("apikey") String apiKey,
             @Header("Authorization") String authToken,
             @Path("bucket") String bucket,
-            @Path(value = "fileName", encoded = true) String fileName,  // <-- encoded=true
-            @Query("upsert") boolean upsert,                            // <-- nuevo parámetro
+            @Path(value = "fileName", encoded = true) String fileName,  //encoded=true
+            @Query("upsert") boolean upsert,                            //nuevo parámetro
             @Part MultipartBody.Part file
     );
 

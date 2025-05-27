@@ -33,14 +33,14 @@ public class MainActivity extends AppCompatActivity {
                 R.id.perfilFragment
         ).build();
 
-        // 1) Encuentra NavHostFragment y NavController
+        //Encuentra NavHostFragment y NavController
         NavHostFragment navHost = (NavHostFragment)
                 getSupportFragmentManager()
                         .findFragmentById(R.id.nav_host_fragment);
         NavController navController = navHost.getNavController();
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
 
-        // 2) Conecta BottomNavigationView con NavController
+        //Conecta BottomNavigationView con NavController
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
         NavigationUI.setupWithNavController(bottomNav, navController);
         //para bloquear la rotacion de la pantalla

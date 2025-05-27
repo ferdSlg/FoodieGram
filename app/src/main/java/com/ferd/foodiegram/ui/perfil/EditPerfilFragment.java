@@ -50,10 +50,7 @@ public class EditPerfilFragment extends Fragment {
             binding.edtCorreo.setText(u.getCorreo());
             binding.edtNombre.setText(u.getNombre());
             binding.edtBio.setText(u.getBio());
-            Glide.with(this)
-                    .load(u.getUrlFotoPerfil())
-                    .placeholder(R.drawable.user)
-                    .into(binding.imgPerfilEdit);
+            Glide.with(this).load(u.getUrlFotoPerfil()).placeholder(R.drawable.user).into(binding.imgPerfilEdit);
         });
 
         // Observa resultado de guardado
@@ -64,14 +61,12 @@ public class EditPerfilFragment extends Fragment {
                     binding.btnGuardarPerfil.setEnabled(false);
                     break;
                 case SUCCESS:
-                    Toast.makeText(getContext(),
-                            "Perfil actualizado", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show();
                     NavHostFragment.findNavController(this).popBackStack();
                     break;
                 case ERROR:
                     binding.btnGuardarPerfil.setEnabled(true);
-                    Toast.makeText(getContext(),
-                            "Error: " + res.message, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getContext(), "Error: " + res.message, Toast.LENGTH_LONG).show();
                     break;
             }
         });

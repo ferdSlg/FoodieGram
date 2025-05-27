@@ -68,9 +68,7 @@ public class LoginFragment extends Fragment {
         inicializarLauncherGoogleSignIn();
         binding.botonGoogle.setOnClickListener(v -> signInWithGoogle());
         binding.btnRecuperarPass.setOnClickListener(v -> {
-            getParentFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.fragment_container_auth, new RecuperarContrasenaFragment())
+            getParentFragmentManager().beginTransaction().replace(R.id.fragment_container_auth, new RecuperarContrasenaFragment())
                     .addToBackStack(null)
                     .commit();
         });

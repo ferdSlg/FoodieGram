@@ -201,12 +201,12 @@ public class PublicacionRepository {
         return result;
     }
 
-    // Eliminar publicación y su imagen
+    //Eliminar publicación y su imagen
     public LiveData<Resource<Void>> deletePost(String postId, String imagePath) {
         MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
         result.setValue(Resource.loading());
 
-        // Paso 1: Eliminar comentarios
+        //Eliminar comentarios
         firestore.collection("publicaciones")
                 .document(postId)
                 .collection("comentarios")
@@ -216,7 +216,7 @@ public class PublicacionRepository {
                         doc.getReference().delete();
                     }
 
-                    // Paso 2: Eliminar likes
+                    // Eliminar likes
                     firestore.collection("publicaciones")
                             .document(postId)
                             .collection("likes")
@@ -226,12 +226,12 @@ public class PublicacionRepository {
                                     doc.getReference().delete();
                                 }
 
-                                // Paso 3: Eliminar la publicación
+                                //Eliminar la publicación
                                 firestore.collection("publicaciones")
                                         .document(postId)
                                         .delete()
                                         .addOnSuccessListener(v -> {
-                                            // Paso 4: Eliminar imagen de Supabase
+                                            //Eliminar imagen de Supabase
                                             storageApi.deleteImage(API_KEY, "Bearer " + API_KEY, "fotos", imagePath)
                                                     .enqueue(new Callback<Void>() {
                                                         @Override

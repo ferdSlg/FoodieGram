@@ -72,9 +72,9 @@ public class UsuarioRepository {
     }
 
     /**
-     * 1) updateEmail (si cambió)
-     * 2) updatePassword (si no está vacío)
-     * 3) sube foto (si hay) y parchea Firestore con nombre, bio y urlFotoPerfil
+     * 1 actualizar email (si cambió)
+     * 2 actualizar password (si no está vacío)
+     * 3  sube foto (si hay) y parchea Firestore con nombre, bio y urlFotoPerfil
      */
     public LiveData<Resource<Void>> updateAuthAndProfile(String userId, String newEmail, String newPassword, String newName, String newBio, File fotoFile) {
         MutableLiveData<Resource<Void>> result = new MutableLiveData<>();
@@ -86,7 +86,7 @@ public class UsuarioRepository {
             return result;
         }
 
-        // 1) email
+        //email
         Task<Void> emailTask = user.getEmail() != null && user.getEmail().equals(newEmail)
                 ? Tasks.forResult(null)
                 : user.updateEmail(newEmail);
@@ -99,7 +99,7 @@ public class UsuarioRepository {
                 return;
             }
 
-            // 2) password
+            //password
             Task<Void> pwdTask = (newPassword == null || newPassword.isEmpty())
                     ? Tasks.forResult(null)
                     : user.updatePassword(newPassword);
@@ -111,7 +111,7 @@ public class UsuarioRepository {
                                     pwdRes.getException().getMessage()));
                     return;
                 }
-                // 3) perfil Firestore + Supabase
+                //perfil Firestore + Supabase
                 patchFirestoreProfile(userId, newName, newBio, fotoFile, result);
             });
         });
@@ -120,7 +120,7 @@ public class UsuarioRepository {
     }
 
     private void patchFirestoreProfile(String userId, String name, String bio, File fotoFile, MutableLiveData<Resource<Void>> live) {
-        // Texto-only update
+        // Texto only update
         Runnable patchText = () -> {
             Map<String, Object> data = new HashMap<>();
             data.put("nombre", name);
@@ -133,11 +133,11 @@ public class UsuarioRepository {
         };
 
         if (fotoFile != null) {
-            // 1) Asegura que el filename incluya una extensión válida
+            //1 Asegura que el filename incluya una extensión válida
             String mimeType = URLConnection.guessContentTypeFromName(fotoFile.getName());
             if (mimeType == null) mimeType = "image/jpeg";
 
-            // 2) Prepara el RequestBody con el mime correcto
+            //2 Prepara el RequestBody con el mime correcto
             RequestBody req = RequestBody.create(
                     MediaType.parse(mimeType),
                     fotoFile
@@ -148,7 +148,7 @@ public class UsuarioRepository {
                     req
             );
 
-            // 3) Sube la imagen a Supabase incluyendo apikey y Authorization
+            //3 Sube la imagen a Supabase incluyendo apikey y Authorization
             //storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, PROFILE_BUCKET, userId + "/" + fotoFile.getName(), true, part)
             // Prepara el Call
             Call<Void> uploadCall = storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, PROFILE_BUCKET, userId + "/" + fotoFile.getName(), true, part);
@@ -181,7 +181,7 @@ public class UsuarioRepository {
                                 live.setValue(Resource.error("Error al subir foto: " + errorJson));
                                 return;
                             }
-                            // 4) Al éxito, toma la URL pública y parchea Firestore
+                            //4 Al éxito, toma la URL pública y parchea Firestore
                             String urlFoto = resp.raw().request().url().toString();
                             Map<String, Object> data = new HashMap<>();
                             data.put("nombre", name);
@@ -296,7 +296,6 @@ public class UsuarioRepository {
                         live.setValue(new ArrayList<>());
                     }
                 });
-
         return live;
     }
 }

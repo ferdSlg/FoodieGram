@@ -36,7 +36,7 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Co
     @Override
     public void onBindViewHolder(@NonNull ComentarioViewHolder holder, int position) {
         Comentario c = comentarios.get(position);
-        // 1) Consultar autor
+        //1 Consultar autor
         FirebaseFirestore.getInstance()
                 .collection("usuarios")
                 .document(c.getUidAutor())
@@ -51,7 +51,7 @@ public class ComentarioAdapter extends RecyclerView.Adapter<ComentarioAdapter.Co
                                 .into(holder.imgAvatar);
                     }
                 });
-        // 2) Texto y timestamp
+        //2 Texto y timestamp
         holder.tvTexto.setText(c.getTexto());
         String fecha = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT)
                 .format(c.getTimestamp());

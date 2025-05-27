@@ -43,27 +43,24 @@ public class HomeFragment extends Fragment {
                               @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // 1) Referenciar RecyclerView
+        //1 Referenciar RecyclerView
         recyclerPublicaciones = view.findViewById(R.id.recyclerPublicaciones);
         recyclerPublicaciones.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // 2) Inicializar ambos ViewModels
+        //2 Inicializar ambos ViewModels
         homeVM = new ViewModelProvider(this).get(HomeViewModel.class);
         pubVM  = new ViewModelProvider(requireActivity())
                 .get(PublicacionViewModel.class);
 
-        // 3) Crear el adapter con los 3 parámetros correctos
+        //3 Crear el adapter con los 3 parámetros correctos
         String idUsuarioActual = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        adaptador = new PublicacionAdapter(
-                new ArrayList<>(),      // lista vacía al inicio
-                pubVM,                  // ViewModel de publicaciones (likes, comentarios, etc.)
-                getViewLifecycleOwner(), // LifecycleOwner para LiveData
-                idUsuarioActual,
-                false
-        );
+        // lista vacía al inicio
+        // pubvmViewModel de publicaciones (likes, comentarios, etc.)
+        // LifecycleOwner para LiveData
+        adaptador = new PublicacionAdapter(new ArrayList<>(), pubVM, getViewLifecycleOwner(), idUsuarioActual, false);
         recyclerPublicaciones.setAdapter(adaptador);
 
-        // 4) Observar la lista de publicaciones desde HomeViewModel
+        //4 Observar la lista de publicaciones desde HomeViewModel
         homeVM.getPublicaciones().observe(
                 getViewLifecycleOwner(),
                 lista -> adaptador.updateData(lista)

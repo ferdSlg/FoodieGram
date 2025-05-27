@@ -23,16 +23,8 @@ public class EditPerfilViewModel extends AndroidViewModel {
         return resultado;
     }
 
-    public void actualizar(
-            String newEmail,
-            String newPassword,
-            String newName,
-            String newBio,
-            File fotoFile
-    ) {
-        LiveData<Resource<Void>> call = repo.updateAuthAndProfile(
-                uid, newEmail, newPassword, newName, newBio, fotoFile
-        );
+    public void actualizar(String newEmail, String newPassword, String newName, String newBio, File fotoFile) {
+        LiveData<Resource<Void>> call = repo.updateAuthAndProfile(uid, newEmail, newPassword, newName, newBio, fotoFile);
         resultado.addSource(call, resultado::setValue);
     }
 }

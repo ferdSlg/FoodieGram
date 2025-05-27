@@ -38,28 +38,27 @@ public class PerfilFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        // 1) Inicializa tu viewModel de perfil
+        //1 Inicializa tu viewModel de perfil
         vm = new ViewModelProvider(this).get(PerfilViewModel.class);
 
-        // 2) Inicializa el PublicacionViewModel compartido
+        //2 Inicializa el PublicacionViewModel compartido
         pubVM = new ViewModelProvider(requireActivity())
                 .get(PublicacionViewModel.class);
 
-        // 3) Configura el RecyclerView con GridLayoutManager
+        //3 Configura el RecyclerView con GridLayoutManager
         binding.recyclerMisPosts.setLayoutManager(new GridLayoutManager(getContext(), 1));
 
-        // 4) Crea el adapter con los 3 parámetros
+        //4 Crea el adapter con los 3 parámetros
         String idUsuarioActual = FirebaseAuth.getInstance().getCurrentUser().getUid();
         adapter = new PublicacionAdapter(new ArrayList<>(), pubVM, getViewLifecycleOwner(), idUsuarioActual, true);
         binding.recyclerMisPosts.setAdapter(adapter);
 
-        // 5) Observa las publicaciones del perfil
-        vm.getMisPublicaciones()
-                .observe(getViewLifecycleOwner(), lista -> {
+        //5 Observa las publicaciones del perfil
+        vm.getMisPublicaciones().observe(getViewLifecycleOwner(), lista -> {
                     adapter.updateData(lista);
                 });
 
-        // Resto de tu lógica (editar perfil, cerrar sesión, bindUsuario…)
+        // editar perfil, cerrar sesión, bindUsuario
         vm.getUsuario().observe(getViewLifecycleOwner(), this::bindUsuario);
         binding.btnEditarPerfil.setOnClickListener(v2 ->
                 NavHostFragment.findNavController(this)
@@ -78,9 +77,6 @@ public class PerfilFragment extends Fragment {
         binding.txtBio.setText(usuario.getBio());
         binding.txtSeguidores.setText(String.valueOf(usuario.getSeguidores().size()));
         binding.txtSeguidos.setText(String.valueOf(usuario.getSeguidos().size()));
-        Glide.with(this)
-                .load(usuario.getUrlFotoPerfil())
-                .placeholder(R.drawable.user)
-                .into(binding.imgPerfil);
+        Glide.with(this).load(usuario.getUrlFotoPerfil()).placeholder(R.drawable.user).into(binding.imgPerfil);
     }
 }
