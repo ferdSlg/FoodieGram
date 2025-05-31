@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.*;
 
@@ -78,5 +80,12 @@ public class PerfilFragment extends Fragment {
         binding.txtSeguidores.setText(String.valueOf(usuario.getSeguidores().size()));
         binding.txtSeguidos.setText(String.valueOf(usuario.getSeguidos().size()));
         Glide.with(this).load(usuario.getUrlFotoPerfil()).placeholder(R.drawable.user).into(binding.imgPerfil);
+
+        binding.imgPerfil.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
+            Bundle args = new Bundle();
+            args.putString("urlImagen", usuario.getUrlFotoPerfil());
+            navController.navigate(R.id.imagenPantallaCompletaFragment, args);
+        });
     }
 }

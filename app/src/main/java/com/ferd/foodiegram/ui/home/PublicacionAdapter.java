@@ -12,7 +12,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LifecycleOwner;
+import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -70,6 +73,13 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
                                     .circleCrop()
                                     .placeholder(R.drawable.user)
                                     .into(holder.imagenPerfil);
+
+                            holder.imagenPerfil.setOnClickListener(v -> {
+                                NavController navController = Navigation.findNavController(v);
+                                Bundle args = new Bundle();
+                                args.putString("urlImagen", usuario.getUrlFotoPerfil());
+                                navController.navigate(R.id.imagenPantallaCompletaFragment, args);
+                            });
                         }
                     } else {
                         holder.textNombreUsuario.setText(publicacion.getNombreUsuario());
@@ -149,12 +159,12 @@ public class PublicacionAdapter extends RecyclerView.Adapter<PublicacionAdapter.
         }
 
         // Ver imagen a pantalla completa
-        /*holder.imagenComida.setOnClickListener(v -> {
+        holder.imagenComida.setOnClickListener(v -> {
+            NavController navController = Navigation.findNavController(v);
             Bundle args = new Bundle();
-            args.putString("imageUrl", publicacion.getUrlFotoComida());
-            Navigation.findNavController(v)
-                    .navigate(R.id.action_home_to_fullScreen, args);
-        });*/
+            args.putString("urlImagen", publicacion.getUrlFotoComida());
+            navController.navigate(R.id.imagenPantallaCompletaFragment, args);
+        });
     }
 
     @Override

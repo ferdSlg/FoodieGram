@@ -53,4 +53,14 @@
         android:name="com.ferd.foodiegram.ui.home.ComentariosFragment"
         android:label="Comentario"
         tools:layout="@layout/fragment_comentarios" />
+    <fragment
+        android:id="@+id/imagenPantallaCompletaFragment"
+        android:name="com.ferd.foodiegram.ui.home.ImagenPantallaCompletaFragment"
+        android:label="Pantalla completa"
+        tools:layout="@layout/fragment_imagen_pantalla_completa" >
+        <argument
+            android:name="urlImagen"
+            app:argType="string"/>
+    </fragment>
+
 </navigation>
