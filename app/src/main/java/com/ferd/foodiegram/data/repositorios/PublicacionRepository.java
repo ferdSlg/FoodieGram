@@ -48,7 +48,8 @@ public class PublicacionRepository {
         MultipartBody.Part body = MultipartBody.Part.createFormData(
                 "file", imageFile.getName(), reqFile);
 
-        storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, "fotos", imageFile.getName(), true, body).enqueue(new Callback<Void>() {
+        storageApi.uploadImage(API_KEY, "Bearer " + API_KEY, "fotos", imageFile.getName(),
+                true, body).enqueue(new Callback<Void>() {
                     @Override
                     public void onResponse(Call<Void> call, Response<Void> response) {
                         if (!response.isSuccessful()) {
@@ -64,8 +65,7 @@ public class PublicacionRepository {
                         datos.put("idUsuario", FirebaseAuth.getInstance().getCurrentUser().getUid());
                         datos.put("nombreUsuario", FirebaseAuth.getInstance().getCurrentUser().getEmail());
 
-                        firestore.collection("publicaciones")
-                                .add(datos)
+                        firestore.collection("publicaciones").add(datos)
                                 .addOnSuccessListener(docRef ->
                                         resultado.setValue(Resource.success(null)))
                                 .addOnFailureListener(e ->

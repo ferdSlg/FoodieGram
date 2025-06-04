@@ -15,7 +15,7 @@ import com.ferd.foodiegram.data.repositorios.PublicacionRepository;
 
 import java.io.File;
 
-public class CrearPublicacionViewModel extends AndroidViewModel {
+public class    CrearPublicacionViewModel extends AndroidViewModel {
 
     private final PublicacionRepository repo;
     private final MutableLiveData<Uri> imagenSeleccionada = new MutableLiveData<>();
