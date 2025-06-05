@@ -53,8 +53,10 @@ Asegúrate de tener:
 
 ---
 ## 🧪 Usuario de prueba
+```
 📧 prueba@gmail.com
 🔐 hola123
+```
 
 ---
 
