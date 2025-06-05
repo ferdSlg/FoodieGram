@@ -31,12 +31,15 @@
 
 
 ## 📂 Estructura del proyecto
+```
 FoodieGram/
-├── ui/ # Fragments y pantallas
-├── model/ # Clases de datos (Usuario, Publicacion, Comentario)
-├── viewmodel/ # Lógica de presentación con LiveData
-├── data/ # Repositorios y conexión con Firebase/Supabase
-├── util/ # Clases auxiliares
+├── ui/         # Fragments y pantallas
+├── model/      # Clases de datos (Usuario, Publicacion, Comentario)
+├── viewmodel/  # Lógica de presentación con LiveData
+├── data/       # Repositorios y conexión con Firebase/Supabase
+├── util/       # Clases auxiliares
+└── ...
+```
 
 ---
 
