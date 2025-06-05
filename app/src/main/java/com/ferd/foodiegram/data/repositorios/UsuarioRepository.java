@@ -225,7 +225,7 @@ public class UsuarioRepository {
         //Referencia a la colección "usuarios"
         CollectionReference col = firestore.collection("usuarios");
 
-        //Prefiltros en servidor:
+        //Prefiltros en servidor
         Task<QuerySnapshot> nameLowerTask = col
                 .orderBy("nombre")
                 .startAt(prefixLower)
